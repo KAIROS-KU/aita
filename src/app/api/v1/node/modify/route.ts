@@ -1,4 +1,4 @@
-import { getNodeCollection } from "@/firebase/index";
+import { getNodeCollection } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 export async function POST(request: Request) {

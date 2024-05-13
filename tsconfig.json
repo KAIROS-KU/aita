@@ -24,6 +24,7 @@
       "@/utils/*": ["./lib/utils/*"],
       "@/domain/*": ["./domain/*"],
       "@/api/*": ["./app/api/*"],
+      "@/firebase/*": ["./firebase/*"],
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

@@ -1,4 +1,4 @@
-import { getLectureCollection } from "@/firebase/index";
+import { getLectureCollection } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 export async function POST(request:Request) {

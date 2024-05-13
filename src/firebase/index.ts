@@ -14,14 +14,21 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-
-export const storage = getStorage(app);
 export const db = getFirestore(app);
-export const COURSE_COLLECTION = collection(db, "course");
-export const USER_COLLECTION = collection(db, "user");
-export const LECTURE_COLLECTION = collection(db, "lecture");
-export const CHAPTER_COLLECTION = collection(db, "chapter");
-export const NODE_COLLECTION = collection(db, "node");
-// export function fn(courseID, lectureID, chapterID, nodeOneID, nodeTwoID) {
-//   return collection(db, "course", courseID, "lecture", lectureID, "chapter", chapterID, "nodeOne", nodeOneID, "nodeTwo");
-// }
+export const storage = getStorage(app);
+
+export function getUserCollection() {
+  return collection(db, "user");
+}
+export function getCourseCollection() {
+  return collection(db, "course");
+}
+export function getLectureCollection(courseID: string) {
+  return collection(db, "course", courseID, "lecture");
+}
+export function getChapterCollection(courseID: string, lectureID: string) {
+  return collection(db, "course", courseID, "lecture", lectureID, "chapter");
+}
+export function getNodeCollection(courseID: string, lectureID: string, chapterID: string) {
+  return collection(db, "course", courseID, "lecture", lectureID, "chapter", chapterID, "node");
+}
