@@ -1,4 +1,5 @@
-import { storage } from "@/app/firebase";
+/*
+import { storage } from "@/firebase/index";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 
@@ -33,3 +34,4 @@ export async function POST(request:Request) {
     );
   }
 }
+*/

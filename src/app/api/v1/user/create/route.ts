@@ -1,10 +1,17 @@
-import { USER_COLLECTION } from "@/app/firebase";
+import { getUserCollection } from "@/firebase/index";
 import { doc, setDoc } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
-    const { userID, email , userName, profilePic, courseURL } = await request.json();
-    const UserRef = doc(USER_COLLECTION);
+    const { userID, email , userName, profilePic, courseURL } = await request.json() as {
+      userID: string,
+      email: string,
+      userName: string,
+      profilePic: string,
+      courseURL: string
+    };
+    const userCollection = getUserCollection();
+    const UserRef = doc(userCollection);
 
     await setDoc(UserRef, {
       userID: userID,
@@ -17,17 +24,17 @@ export async function POST(request:Request) {
     return new Response(
       JSON.stringify({
         success: true,
-        message: "",
-        data: {},
-      }),
+        message: "유저 생성에 성공했습니다",
+        data: {}
+      })
     );
   } catch (error) {
     return new Response(
       JSON.stringify({
         success: false,
         message: "유저 생성에 실패했습니다",
-        data: error,
-      }),
+        data: error
+      })
     );
   }
 }

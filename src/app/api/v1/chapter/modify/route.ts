@@ -22,7 +22,7 @@ export async function POST(request:Request) {
     return new Response(
       JSON.stringify({
         success: false,
-        message: "CHAPTER 생성에 실패했습니다",
+        message: "CHAPTER 수정에 실패했습니다",
         data: error
       })
     );

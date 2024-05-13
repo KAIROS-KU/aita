@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     };
     const nodeCollection = getNodeCollection(courseID, lectureID, chapterID);
     const nodeRef = doc(nodeCollection);
-
+        
     await setDoc(nodeRef, {
       title: title, 
       detail: detail, 
@@ -33,7 +33,7 @@ export async function POST(request: Request) {
     return new Response(
       JSON.stringify({
         success: false,
-        message: "NODE 생성에 실패했습니다",
+        message: "NODE 수정에 실패했습니다",
         data: error
       })
     );
