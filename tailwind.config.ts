@@ -5,6 +5,7 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -25,6 +26,7 @@ const config: Config = {
         500: '#a59797',
         600: '#8e8c8c',
         700: '#8e8c8c',
+        transparent: 'rgba(0, 0, 0, 0.1)',
       },
       main: {
         red: '#ff5656',
@@ -35,7 +37,7 @@ const config: Config = {
       },
     },
     fontSize: {
-      'h1-b-26': ['30px', { fontWeight: 'bold', lineHeight: 'normal', letterSpacing: 'normal' }],
+      'h1-b-26': ['26px', { fontWeight: 'bold', lineHeight: 'normal', letterSpacing: 'normal' }],
       'h2-sb-24': ['24px', { fontWeight: '600', lineHeight: 'normal', letterSpacing: 'normal' }],
       'h1-b-20': ['20px', { fontWeight: 'bold', lineHeight: 'normal', letterSpacing: 'normal' }],
       'h2-sb-20': ['20px', { fontWeight: '600', lineHeight: 'normal', letterSpacing: 'normal' }],
