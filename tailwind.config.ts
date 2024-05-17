@@ -41,6 +41,7 @@ const config: Config = {
       'h2-sb-24': ['24px', { fontWeight: '600', lineHeight: 'normal', letterSpacing: 'normal' }],
       'h1-b-20': ['20px', { fontWeight: 'bold', lineHeight: 'normal', letterSpacing: 'normal' }],
       'h2-sb-20': ['20px', { fontWeight: '600', lineHeight: 'normal', letterSpacing: 'normal' }],
+      'h2-m-20': ['20px', { fontWeight: '400', lineHeight: 'normal', letterSpacing: 'normal' }],
       'h3-r-20': ['20px', { fontWeight: 'normal', lineHeight: 'normal', letterSpacing: 'normal' }],
       'h2-sb-18': ['18px', { fontWeight: '600', lineHeight: 'normal', letterSpacing: 'normal' }],
       'h3-m-18': ['18px', { fontWeight: '500', lineHeight: 'normal', letterSpacing: 'normal' }],

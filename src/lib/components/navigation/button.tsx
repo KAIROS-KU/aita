@@ -1,3 +1,4 @@
+import GlobalIcon from "../global_icons"
 import Icon from "./icons"
 
 function Recent({
@@ -14,10 +15,10 @@ function Recent({
             style={{ borderRadius: 20 }}
         >
             <div className="flex flex-row gap-3">
-                <Icon.Recent />
-                <div className="h3-m-18">{text}</div>
+                <GlobalIcon.Recent />
+                <div className="text-h3-m-18">{text}</div>
             </div>
-            <Icon.Arrow />
+            <GlobalIcon.Arrow />
         </button>
     )
 }
@@ -36,10 +37,10 @@ function Course({
             style={{ borderRadius: 20 }}
         >
             <div className="flex flex-row gap-3">
-                <Icon.Course />
-                <div className="h3-m-18">{text}</div>
+                <GlobalIcon.Course />
+                <div className="text-h3-m-18">{text}</div>
             </div>
-            <Icon.Arrow />
+            <GlobalIcon.Arrow />
         </button>
     )
 }
@@ -56,8 +57,8 @@ function AddCourse({
             onClick={onClick}
             className="flex items-center p-3 rounded-xl gap-1 bg-neutral-white w-fit"
         >
-            <Icon.Add />
-            <div className="h3-m-18">{text}</div>
+            <GlobalIcon.Add />
+            <div className="text-body-r-12">{text}</div>
         </button>
     )
 }

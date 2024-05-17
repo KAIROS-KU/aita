@@ -26,12 +26,12 @@ export default function Navigation({
             <div className="px-4 pt-12 flex flex-col gap-5 bg-neutral-200" style={{ borderRadius: "25px 0 0 25px" }}>
                 <div className="p-3 w-full flex flex-row gap-4 items-center">
                     <Image alt="sample" src={SampleData.image} width={50} height={50} className="rounded-full" style={{ objectFit: "cover", aspectRatio: "1" }} />
-                    <div className="h1-b-20">{SampleData.name}</div>
+                    <div className="text-h1-b-20">{SampleData.name}</div>
                 </div>
                 <div className="flex flex-col gap-3 items-center">
                     <Button.Recent text="최근 강의" onClick={() => { }} />
                     {SampleData.courses.map((course, index) => (
-                        <Button.Course key={index} text={course} onClick={() => { }} />
+                        <Button.Course key={index} text={course.courseName} onClick={() => { }} />
                     ))}
                     <div className="p-6">
                         <Button.AddCourse text="강의 추가" onClick={() => { }} />
