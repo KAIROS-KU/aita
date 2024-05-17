@@ -1,16 +1,16 @@
-import { getChapterCollection } from "@/firebase";
+import { getChapterDoc } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 export async function PUT(request:Request) {
   try {
-    const { courseId, lectureId, chapterName } = await request.json() as {
+    const { courseId, lectureId, chapterId, chapterName } = await request.json() as {
       courseId: string,
       lectureId: string,
+      chapterId: string,
       chapterName: string
     };
     
-    const chapterCollection = getChapterCollection(courseId, lectureId);
-    const chapterRef = doc(chapterCollection);
+    const chapterRef = getChapterDoc(courseId, lectureId, chapterId);
 
     await setDoc(chapterRef, {
       chapterName: chapterName

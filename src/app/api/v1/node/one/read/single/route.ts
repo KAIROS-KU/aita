@@ -19,7 +19,6 @@ export async function POST(request:Request) {
         success: true,
         message: "NODE 개별 불러오기에 성공했습니다",
         data: {
-          nodeId: nodeData?.nodeId,
           title: nodeData?.title,
           detail: nodeData?.detail
         }

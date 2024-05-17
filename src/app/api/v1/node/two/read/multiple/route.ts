@@ -14,7 +14,6 @@ export async function POST(request:Request) {
     const querySnapshot = await getDocs(nodeRef);
     
     const documents = querySnapshot.docs.map(doc => ({
-        nodeId: doc.data().nodeId,
         title: doc.data().title,
         detail: doc.data().detail
     }))
