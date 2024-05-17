@@ -1,5 +1,5 @@
 import { getNodeOneCollection } from "@/firebase";
-import { doc, getDocs } from "firebase/firestore";
+import { getDocs } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {

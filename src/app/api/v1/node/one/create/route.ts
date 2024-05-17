@@ -8,7 +8,7 @@ export async function POST(request: Request) {
       lectureId: string,
       chapterId: string,
       title: string,
-      detail: string,
+      detail: string
     };
 
     const createdAt = Timestamp.fromDate(new Date());
