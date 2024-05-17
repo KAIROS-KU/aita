@@ -7,36 +7,84 @@ const SampleData = {
             courseCode: "MUS101",
             profName: "김영희",
             createdAt: new Date(),
+            courseID: "123",
+            lectures: [
+                {
+                    lectureID: "1",
+                    lectureName: "음악의 기본",
+                    createdAt: new Date(),
+                }
+            ]
         },
         {
             courseName: "미술사 I",
             courseCode: "ART101",
             profName: "이영수",
             createdAt: new Date(),
+            courseID: "345",
+            lectures: [
+                {
+                    lectureID: "2",
+                    lectureName: "미술의 기본",
+                    createdAt: new Date(),
+                }
+            ]
         },
         {
             courseName: "영화의이해",
             courseCode: "CIN101",
             profName: "박지영",
             createdAt: new Date(),
+            courseID: "678",
+            lectures: [
+                {
+                    lectureID: "3",
+                    lectureName: "영화의 기본",
+                    createdAt: new Date(),
+                }
+            ]
         },
         {
             courseName: "인공지능",
             courseCode: "AI101",
             profName: "김철수",
             createdAt: new Date(),
+            courseID: "910",
+            lectures: [
+                {
+                    lectureID: "4",
+                    lectureName: "인공지능의 기본",
+                    createdAt: new Date(),
+                }
+            ]
         },
         {
             courseName: "딥러닝의수학",
             courseCode: "AI102",
             profName: "김철수",
             createdAt: new Date(),
+            courseID: "111",
+            lectures: [
+                {
+                    lectureID: "5",
+                    lectureName: "딥러닝의 기본",
+                    createdAt: new Date(),
+                }
+            ]
         },
         {
             courseName: "통계학",
             courseCode: "STA101",
             profName: "이영희",
             createdAt: new Date(),
+            courseID: "222",
+            lectures: [
+                {
+                    lectureID: "6",
+                    lectureName: "통계학의 기본",
+                    createdAt: new Date(),
+                }
+            ]
         },
     ]
 }

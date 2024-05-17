@@ -3,6 +3,7 @@
 import formatDate from "@/lib/utils/format_date";
 import { Timestamp } from "firebase/firestore";
 import Button from "./button";
+import GlobalButton from "@/lib/components/global_button";
 
 function LectureItem({
     lectureName,
@@ -25,7 +26,7 @@ function LectureItem({
             </div>
 
             <div className="flex gap-3">
-                <Button.SeeTree text="질문 트리" onClick={() => {}} />
+                <GlobalButton.SeeTree text="질문 트리" onClick={() => {}} />
                 <Button.ToLearn text="강의 보기" onClick={() => {}} />
             </div>
         </div>

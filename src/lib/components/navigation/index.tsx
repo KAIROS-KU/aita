@@ -7,22 +7,14 @@ import Image from "next/image"
 
 type onButton = "home" | "notes" | "noti" | "tree"
 
-export default function Navigation({
+function Full({
     onButton
 }: {
     onButton: onButton
 }) {
     return (
         <div className="flex flex-row bg-main-500 h-screen w-min">
-            <div className="px-4 pt-12 pb-6 flex flex-col justify-between items-center w-min">
-                <div className="px-2 py-4 flex flex-col gap-5 justify-center bg-neutral-transparent" style={{ borderRadius: 50 }}>
-                    <Icon.Home onOff={onButton === "home"} />
-                    <Icon.Notes onOff={onButton === "notes"} />
-                    <Icon.Noti onOff={onButton === "noti"} />
-                    <Icon.Tree onOff={onButton === "tree"} />
-                </div>
-                <Icon.Settings />
-            </div>
+            <Short onButton={onButton} />
             <div className="px-4 pt-12 flex flex-col gap-5 bg-neutral-200" style={{ borderRadius: "25px 0 0 25px" }}>
                 <div className="p-3 w-full flex flex-row gap-4 items-center">
                     <Image alt="sample" src={SampleData.image} width={50} height={50} className="rounded-full" style={{ objectFit: "cover", aspectRatio: "1" }} />
@@ -41,3 +33,28 @@ export default function Navigation({
         </div>
     )
 }
+
+function Short({
+    onButton
+}: {
+    onButton: onButton
+}) {
+    return (
+        <div className="px-4 pt-12 pb-6 flex flex-col bg-main-500 h-screen justify-between items-center w-min">
+            <div className="px-2 py-4 flex flex-col gap-5 justify-center bg-neutral-transparent" style={{ borderRadius: 50 }}>
+                <Icon.Home onOff={onButton === "home"} />
+                <Icon.Notes onOff={onButton === "notes"} />
+                <Icon.Noti onOff={onButton === "noti"} />
+                <Icon.Tree onOff={onButton === "tree"} />
+            </div>
+            <Icon.Settings />
+        </div>
+    )
+}
+
+const Navigation = {
+    Full,
+    Short
+}
+
+export default Navigation;
