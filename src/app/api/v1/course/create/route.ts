@@ -13,7 +13,7 @@ export async function POST(request:Request) {
     };
 
     const cookieStore = cookies();
-    const userId = cookieStore.get("userId");
+    const userId = cookieStore.get("userId")?.value;
     const createdAt = Timestamp.fromDate(new Date());
     
     const courseCollection = getCourseCollection();

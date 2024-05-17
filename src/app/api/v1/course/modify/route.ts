@@ -13,7 +13,7 @@ export async function PUT(request:Request) {
     };
     
     const cookieStore = cookies();
-    const userId = cookieStore.get("userId");
+    const userId = cookieStore.get("userId")?.value;
     
     const courseCollection = getCourseCollection();
     const courseRef = doc(courseCollection);

@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 export async function POST(request:Request) {
   try {
     const cookieStore = cookies();
-    const userId = cookieStore.get("userId");
+    const userId = cookieStore.get("userId")?.value;
 
     const courseCollectionRef = getCourseCollection();
     const q = query(courseCollectionRef, where('userId', "==", userId));
