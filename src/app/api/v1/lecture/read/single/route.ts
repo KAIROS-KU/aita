@@ -1,15 +1,15 @@
 import { getLectureCollection } from "@/firebase";
-import { doc, getDoc, Timestamp } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
-    const { courseID, lectureID } = await request.json() as {
-      courseID: string,
-      lectureID: string
+    const { courseId, lectureId } = await request.json() as {
+      courseId: string,
+      lectureId: string
     };
     
-    const lectureCollection = getLectureCollection(courseID);
-    const lectureRef = doc(lectureCollection, lectureID);
+    const lectureCollection = getLectureCollection(courseId);
+    const lectureRef = doc(lectureCollection, lectureId);
     const lectureDoc = await getDoc(lectureRef);
     const lectureData = lectureDoc.data();
     
@@ -18,10 +18,10 @@ export async function POST(request:Request) {
         success: true,
         message: "LECTURE 개별 불러오기에 성공했습니다",
         data: {
-          lectureID: lectureData?.lectureID,
-          createdAt: lectureData?.createdAt.toDate(), //timestamp형식이면 이렇게 하는거맞낭
+          lectureId: lectureData?.lectureId,
           lectureName: lectureData?.lectureName,
-          file: lectureData?.file
+          fileUrl: lectureData?.fileUrl,
+          createdAt: lectureData?.createdAt
         }
       })
     );

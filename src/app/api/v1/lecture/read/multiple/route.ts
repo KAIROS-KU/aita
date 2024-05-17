@@ -1,26 +1,26 @@
 import { getLectureCollection } from "@/firebase";
-import { doc, getDocs } from "firebase/firestore";
+import { getDocs } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
-    const { courseID } = await request.json() as {
-      courseID: string,
+    const { courseId } = await request.json() as {
+      courseId: string
     };
     
-    const lectureRef = getLectureCollection(courseID);
+    const lectureRef = getLectureCollection(courseId);
     const querySnapshot = await getDocs(lectureRef);
 
     const documents = querySnapshot.docs.map(doc => ({
-      lectureID: doc.data().lectureID,
+      lectureId: doc.data().lectureId,
       lectureName: doc.data().lectureName,
-      file: doc.data().file,
+      fileUrl: doc.data().fileUrl
     }))
     
     return new Response(
       JSON.stringify({
         success: true,
         message: "LECTURE 불러오기에 성공했습니다",
-        data: document
+        data: documents
       })
     );
   } catch (error) {

@@ -1,17 +1,17 @@
 import { getNodeTwoDoc } from "@/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { getDoc } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
-    const { courseID, lectureID, chapterID, nodeOneID, nodeTwoID } = await request.json() as {
-      courseID: string,
-      lectureID: string,
-      chapterID: string,
-      nodeOneID: string,
-      nodeTwoID: string
+    const { courseId, lectureId, chapterId, nodeOneId, nodeTwoId } = await request.json() as {
+      courseId: string,
+      lectureId: string,
+      chapterId: string,
+      nodeOneId: string,
+      nodeTwoId: string
     };
     
-    const nodeRef = getNodeTwoDoc(courseID, lectureID, chapterID, nodeOneID, nodeTwoID);
+    const nodeRef = getNodeTwoDoc(courseId, lectureId, chapterId, nodeOneId, nodeTwoId);
     const nodeDoc = await getDoc(nodeRef);
     const nodeData = nodeDoc.data();
     
@@ -20,7 +20,7 @@ export async function POST(request:Request) {
         success: true,
         message: "NODE 개별 불러오기에 성공했습니다",
         data: {
-          nodeID: nodeData?.nodeID,
+          nodeID: nodeData?.nodeId,
           title: nodeData?.title,
           detail: nodeData?.detail
         }

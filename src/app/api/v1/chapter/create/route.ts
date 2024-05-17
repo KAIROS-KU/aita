@@ -3,21 +3,20 @@ import { doc, setDoc, Timestamp } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
-    const { courseID, lectureID, chapterName, createdAt} = await request.json() as{
-      courseID: string,
-      lectureID: string,
-      chapterName: string,
-      createdAt: string,
-    }
+    const { courseId, lectureId, chapterName } = await request.json() as {
+      courseId: string,
+      lectureId: string,
+      chapterName: string
+    };
 
-    const createdAtTimestamp = Timestamp.fromDate(new Date(createdAt));
+    const createdAt = Timestamp.fromDate(new Date());
 
-    const chapterCollection = getChapterCollection(courseID, lectureID);
+    const chapterCollection = getChapterCollection(courseId, lectureId);
     const chapterRef = doc(chapterCollection);
 
     await setDoc(chapterRef, {
       chapterName: chapterName,
-      createdAt: createdAtTimestamp
+      createdAt: createdAt
     });
 
     return new Response(

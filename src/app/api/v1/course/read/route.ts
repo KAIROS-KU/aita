@@ -1,19 +1,22 @@
 import { getCourseCollection } from "@/firebase";
-import { doc, getDocs, query, where } from "firebase/firestore";
+import { getDocs, query, where } from "firebase/firestore";
+import { cookies } from "next/headers";
 
-export async function GET() { //userID 불러오는거 맞는지 아닌지 모르겟어서 일단안함
+export async function POST(request:Request) {
   try {
-    const userID = " "
+    const cookieStore = cookies();
+    const userId = cookieStore.get("userId");
+
     const courseCollectionRef = getCourseCollection();
-    const q = query(courseCollectionRef, where(`userID`, "==", userID));
+    const q = query(courseCollectionRef, where('userId', "==", userId));
     const querySnapshot = await getDocs(q);
 
     const documents = querySnapshot.docs.map(doc => ({ 
-      courseID: doc.data().courseID,
+      courseId: doc.data().courseId,
       courseName: doc.data().courseName,
       courseCode: doc.data().courseCode,
       createdAt: doc.data().createdAt,
-      syllabusFile: doc.data().syllabusFile,
+      syllabusFile: doc.data().syllabusFile
     }));
 
     return new Response(
@@ -33,5 +36,3 @@ export async function GET() { //userID 불러오는거 맞는지 아닌지 모�
     );
   }
 }
-
-

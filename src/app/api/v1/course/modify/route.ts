@@ -1,15 +1,23 @@
 import { getCourseCollection } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
-export async function POST(request:Request) {
+export async function PUT(request:Request) {
   try {
-    const { userID, courseID, courseName, courseCode, syllabusFile, profName } = await request.json();
+    const { userId, courseId, courseName, courseCode, syllabusFile, profName } = await request.json() as {
+      userId: string,
+      courseId: string,
+      courseName: string,
+      courseCode: string,
+      syllabusFile: string,
+      profName: string
+    };
+    
     const courseCollection = getCourseCollection();
     const courseRef = doc(courseCollection);
         
     await setDoc(courseRef, {
-      userID: userID,
-      courseID: courseID,
+      userId: userId,
+      courseId: courseId,
       courseName: courseName,
       courseCode:courseCode,
       syllabusFile: syllabusFile,
