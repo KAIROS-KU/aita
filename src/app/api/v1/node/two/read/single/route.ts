@@ -18,7 +18,7 @@ export async function POST(request:Request) {
     return new Response(
       JSON.stringify({
         success: true,
-        message: "NODE 개별 불러오기에 성공했습니다",
+        message: "NODE Two 개별 불러오기에 성공했습니다",
         data: {
           nodeID: nodeData?.nodeId,
           title: nodeData?.title,
@@ -30,7 +30,7 @@ export async function POST(request:Request) {
     return new Response(
       JSON.stringify({
         success: false,
-        message: "NODE 개별 불러오기에 실패했습니다",
+        message: "NODE Two 개별 불러오기에 실패했습니다",
         data: error
       })
     );
