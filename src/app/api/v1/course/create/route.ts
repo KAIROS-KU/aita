@@ -3,12 +3,11 @@ import { doc, setDoc } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
-    const { userID, courseID, courseName, courseCode, courseFile, syllabusFile, profName, createdAt } = await request.json() as {
+    const { userID, courseID, courseName, courseCode, syllabusFile, profName, createdAt } = await request.json() as {
       userID: string,
       courseID: string,
       courseName: string,
       courseCode: string,
-      courseFile: string,
       syllabusFile: string,
       profName: string,
       createdAt: Date
@@ -21,7 +20,6 @@ export async function POST(request:Request) {
       courseID: courseID,
       courseName: courseName,
       courseCode:courseCode,
-      courseFile: courseFile,
       syllabusFile: syllabusFile,
       profName: profName,
       createdAt: createdAt,

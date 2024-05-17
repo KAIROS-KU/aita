@@ -3,7 +3,12 @@ import { doc, setDoc } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
-    const { courseID, lectureID, chapterName } = await request.json();
+    const { courseID, lectureID, chapterName } = await request.json() as {
+      courseID: string,
+      lectureID: string,
+      chapterName: string
+    }
+
     const chapterCollection = getChapterCollection(courseID, lectureID);
     const chapterRef = doc(chapterCollection);
 
@@ -14,7 +19,7 @@ export async function POST(request:Request) {
     return new Response(
       JSON.stringify({
         success: true,
-        message: "CHAPTER 생성에 성공했습니다",
+        message: "CHAPTER 수정에 성공했습니다",
         data: {}
       })
     );

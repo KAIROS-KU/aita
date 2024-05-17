@@ -3,14 +3,13 @@ import { doc, setDoc } from "firebase/firestore";
 
 export async function POST(request: Request) {
   try {
-    const { courseID, lectureID, chapterID, title, detail, parentNode, prompt } = await request.json() as {
+    const { courseID, lectureID, chapterID, title, detail, createdAt } = await request.json() as {
       courseID: string,
       lectureID: string,
       chapterID: string,
       title: string,
       detail: string,
-      parentNode: string | null,
-      prompt: string
+      createdAt: string
     };
     const nodeCollection = getNodeCollection(courseID, lectureID, chapterID);
     const nodeRef = doc(nodeCollection);
@@ -18,8 +17,7 @@ export async function POST(request: Request) {
     await setDoc(nodeRef, {
       title: title, 
       detail: detail, 
-      parentNode: parentNode, 
-      prompt: prompt
+      createdAt: createdAt
     });
 
     return new Response(

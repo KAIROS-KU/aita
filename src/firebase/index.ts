@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection } from "firebase/firestore";
+import { getFirestore, collection, doc } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -29,6 +29,21 @@ export function getLectureCollection(courseID: string) {
 export function getChapterCollection(courseID: string, lectureID: string) {
   return collection(db, "course", courseID, "lecture", lectureID, "chapter");
 }
-export function getNodeCollection(courseID: string, lectureID: string, chapterID: string) {
+export function getNodeOneCollection(courseID: string, lectureID: string, chapterID: string) {
   return collection(db, "course", courseID, "lecture", lectureID, "chapter", chapterID, "node");
+}
+export function getNodeTwoCollection(courseID: string, lectureID: string, chapterID: string, nodeOneID: string){
+  return collection(db, "course", courseID, "lecture", lectureID, "chapter", chapterID, "node_one", nodeOneID, "node_two");
+}
+export function getLectureDoc(courseID: string, lectureID: string) {
+  return doc(db, "course", courseID, "lecture", lectureID)
+}
+export function getChapterDoc(courseID: string, lectureID: string, chapterID: string) {
+  return doc(db, "course", courseID, "lecture", lectureID, "chapter", chapterID)
+}
+export function getNodeOneDoc(courseID: string, lectureID: string, chapterID: string, nodeOneID: string) {
+  return doc(db, "course", courseID, "lecture", lectureID, "chapter", chapterID, "node_one", nodeOneID)
+}
+export function getNodeTwoDoc(courseID: string, lectureID: string, chapterID: string, nodeOneID: string, nodeTwoID: string) {
+  return doc(db, "course", courseID, "lecture", lectureID, "chapter", chapterID, "node_one", nodeOneID, "node_two", nodeTwoID)
 }

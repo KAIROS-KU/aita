@@ -19,7 +19,7 @@ export async function POST(request:Request) {
     return new Response(
       JSON.stringify({
         success: true,
-        message: "LECTURE 생성에 성공했습니다",
+        message: "LECTURE 수정에 성공했습니다",
         data: {}
       })
     );
