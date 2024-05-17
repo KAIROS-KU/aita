@@ -5,6 +5,7 @@ import SampleData from "../sample_data";
 import Components from "./components";
 import Lectures from "./lectures";
 import Button from "./button";
+import GlobalButton from "@/lib/components/global_button";
 
 export default function Home() {
   return (
@@ -19,7 +20,7 @@ export default function Home() {
       <div className="flex flex-col gap-3 bg-neutral-100 p-5 mt-8" style={{ borderRadius: 20 }}>
         <div className="flex justify-between">
           <div className="text-h2-sb-20 pb-5">강의자료</div>
-          <Button.AddLectureButton text="강의자료 추가" onClick={() => { }} />
+          <GlobalButton.AddButton text="강의자료 추가" onClick={() => { }} />
 
         </div>
         {SampleData.courses.map((course, index) => (
