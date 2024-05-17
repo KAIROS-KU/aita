@@ -2,20 +2,25 @@ import GlobalIcon from "@/lib/components/global_icons";
 
 function AddButton({
     text,
-    onClick
+    onChange
 }: {
     text: string,
-    onClick: (e: any) => void
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }) {
     return (
-        <button
-            onClick={onClick}
-            className="flex items-center p-3 rounded-xl gap-1 bg-neutral-white w-fit"
-        >
-            <GlobalIcon.Add />
-            <div className="text-body-r-12">{text}</div>
-        </button>
-    )
+        <label htmlFor="file">
+            <div className="flex items-center p-3 rounded-xl gap-1 bg-neutral-white w-fit">
+                <GlobalIcon.Add />
+                <div className="text-body-r-12">{text}</div>
+                <input
+                    id="file"
+                    style={{ display: "none" }}
+                    onChange={onChange}
+                    type="file"
+                />
+            </div>
+        </label>
+    );
 }
 
 function SeeTree({

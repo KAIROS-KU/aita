@@ -13,6 +13,26 @@ const SampleData = {
                     lectureID: "1",
                     lectureName: "음악의 기본",
                     createdAt: new Date(),
+                    chapters: [
+                        {
+                            chapterID: "1",
+                            chapterName: "음악의 기본",
+                            createdAt: new Date(),
+                            nodes: [
+                                {
+                                    nodeOneID: "1",
+                                    title: "음악의 기본",
+                                    createdAt: new Date(),
+                                    detail: "음악의 기본을 배웁니다.",
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    lectureID: "2",
+                    lectureName: "미술의 기본",
+                    createdAt: new Date(),
                 }
             ]
         },
