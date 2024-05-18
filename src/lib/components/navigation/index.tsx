@@ -4,14 +4,21 @@ import SampleData from "@/app/sample_data"
 import Button from "./button"
 import Icon from "./icons"
 import Image from "next/image"
-
-type onButton = "home" | "notes" | "noti" | "tree"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import GlobalModal from "../global_modal"
 
 function Full({
     onButton
 }: {
-    onButton: onButton
+    onButton: OnButton
 }) {
+    const router = useRouter()
+    const [onModal, setOnModal] = useState(false)
+    const toggleModal = () => {
+        setOnModal(!onModal)
+    }
+
     return (
         <div className="flex flex-row bg-main-500 h-screen w-min">
             <Short onButton={onButton} />
@@ -21,15 +28,16 @@ function Full({
                     <div className="text-h1-b-20">{SampleData.name}</div>
                 </div>
                 <div className="flex flex-col gap-3 items-center">
-                    <Button.Recent text="최근 강의" onClick={() => { }} />
+                    <Button.Recent text="최근 강의" onClick={toggleModal} />
                     {SampleData.courses.map((course, index) => (
-                        <Button.Course key={index} text={course.courseName} onClick={() => { }} />
+                        <Button.Course key={index} text={course.courseName} onClick={() => router.push(`/course/${course.courseID}`)} />
                     ))}
                     <div className="p-6">
-                        <Button.AddCourse text="강의 추가" onClick={() => { }} />
+                        <Button.AddCourse text="강의 추가" onClick={() => router.push("/course/create")} />
                     </div>
                 </div>
             </div>
+            <GlobalModal.NotReady onModal={onModal} toggleModal={toggleModal} />
         </div>
     )
 }
@@ -37,17 +45,28 @@ function Full({
 function Short({
     onButton
 }: {
-    onButton: onButton
+    onButton: OnButton
 }) {
+    const router = useRouter()
+    const [onModal, setOnModal] = useState(false)
+    const toggleModal = () => {
+        setOnModal(!onModal)
+    }
+
+    const toHome = () => {
+        router.push("/course")
+    }
+
     return (
         <div className="px-4 pt-12 pb-6 flex flex-col bg-main-500 h-screen justify-between items-center w-min">
             <div className="px-2 py-4 flex flex-col gap-5 justify-center bg-neutral-transparent" style={{ borderRadius: 50 }}>
-                <Icon.Home onOff={onButton === "home"} />
-                <Icon.Notes onOff={onButton === "notes"} />
-                <Icon.Noti onOff={onButton === "noti"} />
-                <Icon.Tree onOff={onButton === "tree"} />
+                <Icon.Home onOff={onButton === "home"} onClick={toHome} />
+                <Icon.Notes onOff={onButton === "notes"} onClick={toggleModal} />
+                <Icon.Noti onOff={onButton === "noti"} onClick={toggleModal} />
+                <Icon.Tree onOff={onButton === "tree"} onClick={toggleModal} />
             </div>
-            <Icon.Settings />
+            <Icon.Settings onClick={toggleModal} />
+            <GlobalModal.NotReady onModal={onModal} toggleModal={toggleModal} />
         </div>
     )
 }

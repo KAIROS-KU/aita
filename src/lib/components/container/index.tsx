@@ -8,9 +8,11 @@ import Image from "next/image";
 import GlobalButton from "../global_button";
 
 function MainContainer({ children }: { children: ReactNode }) {
+    
+    const [onButton, setOnButton] = useState<OnButton>("home")
     return (
         <div className="w-full h-full flex">
-            <Navigation.Full onButton="home" />
+            <Navigation.Full onButton={onButton} />
             <div className="px-16 py-12 w-full h-full">
                 {children}
             </div>
@@ -97,6 +99,11 @@ function SignUpContainer({
         }
     };
 
+    const signUp = (input: SignUpProps) => {
+        onClick(input);
+        router.push("/course");
+    }
+
     return (
         <div className="w-full h-full flex items-center">
             <div className="bg-neutral-200 h-screen px-20 box-border items-center justify-center flex flex-col" style={{ width: 420 }}>
@@ -106,7 +113,7 @@ function SignUpContainer({
                         <div className="text-h3-m-14 text-neutral-700 ml-3">프로필 사진</div>
                         <div className="flex gap-5">
                             <div className="flex flex-col gap-1">
-                                <GlobalButton.AddButton
+                                <GlobalButton.AddFile
                                     text="파일 업로드"
                                     onChange={handleFileUpload}
                                 />
@@ -166,17 +173,8 @@ function SignUpContainer({
                     </div>
                     <GlobalComponents.MainButton
                         text="계정 만들기"
-                        onClick={() => onClick(input)}
+                        onClick={() => signUp(input)}
                     />
-                </div>
-                <div className="flex items-center absolute bottom-10" onClick={() => router.push("/sign-up")}>
-                    <div className="text-body-r-12 text-neutral-700 mr-1">계정이 없다면?</div>
-                    <div className="text-h3-m-14 text-main-500">회원가입</div>
-                    <div className="w-6 h-6 flex flex-col items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">
-                            <path d="M1 11L6 6L1 1" stroke="#FF5656" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </div>
                 </div>
             </div>
             {children}
@@ -185,9 +183,10 @@ function SignUpContainer({
 }
 
 function WideContainer({ children }: { children: ReactNode }) {
+    const [onButton, setOnButton] = useState<OnButton>("home")
     return (
         <div className="w-full h-screen flex">
-            <Navigation.Short onButton="home" />
+            <Navigation.Short onButton={onButton} />
             <div className="px-10 py-12 w-full h-full">
                 {children}
             </div>

@@ -1,31 +1,22 @@
 "use client"
 
 import Container from "@/lib/components/container";
-import Lectures from "./lectures";
-import GlobalButton from "@/lib/components/global_button";
-import SampleData from "@/app/sample_data";
-import GlobalComponents from "@/lib/components/global_components";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
-  return (
-    <Container.MainContainer>
-      <div className="flex flex-col gap-4 w-full">
-        <div className="flex flex-row gap-4 items-end">
-          <GlobalComponents.CourseName name={SampleData.courses[0].courseName} />
-          <GlobalComponents.CourseCode code={SampleData.courses[0].courseCode} />
-        </div>
-        <GlobalComponents.ProfName name={SampleData.courses[0].profName} />
-      </div>
-      <div className="flex flex-col gap-3 bg-neutral-100 p-5 mt-8" style={{ borderRadius: 20 }}>
-        <div className="flex justify-between">
-          <div className="text-h2-sb-20 pb-5">강의자료</div>
-          <GlobalButton.AddButton text="강의자료 추가" onClick={() => { }} />
+export default function LogInPage() {
+    const router = useRouter()
 
-        </div>
-        {SampleData.courses.map((course, index) => (
-          <Lectures.LectureItem key={index} lectureName={course.courseName} createdAt={course.createdAt} />
-        ))}
-      </div>
-    </Container.MainContainer>
-  );
+    const signIn = (signInData: LogInProps) => {
+        router.push("/course")
+    }
+
+    return (
+        <Container.LogInContainer onClick={(signInData) => signIn(signInData)}>
+            <div className="flex items-center justify-center bg-main-100 w-full h-screen">
+                <svg width="268" height="59" viewBox="0 0 268 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.8 59L30.1 0.2H56.1L85.3 59H63.8L58.9 48.3H27.3L21.8 59H0.8ZM32.8 34.5H53.3L43.6 13.2H42.6L32.8 34.5ZM94.1328 59V0.2H113.333V59H94.1328ZM147.089 59V13.7H123.289V0.0999954H190.589V13.7H166.489V59H147.089ZM183.417 59L212.717 0.2H238.717L267.917 59H246.417L241.517 48.3H209.917L204.417 59H183.417ZM215.417 34.5H235.917L226.217 13.2H225.217L215.417 34.5Z" fill="#FF6262" />
+                </svg>
+            </div>
+        </Container.LogInContainer>
+    )
 }

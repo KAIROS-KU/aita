@@ -1,11 +1,13 @@
 "use client"
 
 import Container from "@/lib/components/container";
+import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
+    const router = useRouter()
 
     const signUp = (signUpData: SignUpProps) => {
-        console.log(signUpData)
+        router.push("/")
     }
 
     return (

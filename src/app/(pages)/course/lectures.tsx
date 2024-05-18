@@ -2,15 +2,19 @@
 
 import formatDate from "@/lib/utils/format_date";
 import { Timestamp } from "firebase/firestore";
-import Button from "./button";
+import Button from "./[courseID]/button";
 import GlobalButton from "@/lib/components/global_button";
 
 function LectureItem({
     lectureName,
-    createdAt
+    createdAt,
+    treeClick,
+    lectureClick
 }: {
     lectureName: string,
-    createdAt: Date | Timestamp
+    createdAt: Date | Timestamp,
+    treeClick: () => void,
+    lectureClick: () => void
 }) {
     return (
         <div className="p-5 bg-neutral-white flex justify-between w-full items-center " style={{ borderRadius: 20 }}>
@@ -26,8 +30,8 @@ function LectureItem({
             </div>
 
             <div className="flex gap-3">
-                <GlobalButton.SeeTree text="질문 트리" onClick={() => {}} />
-                <Button.ToLearn text="강의 보기" onClick={() => {}} />
+                <GlobalButton.SeeTree text="질문 트리" onClick={treeClick} />
+                <Button.ToLearn text="강의 보기" onClick={lectureClick} />
             </div>
         </div>
     );

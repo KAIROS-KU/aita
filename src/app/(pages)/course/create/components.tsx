@@ -15,7 +15,7 @@ function CourseInput({
             <input
                 type="text"
                 placeholder={placeholder}
-                className="text-neutral-400 text-body-r-16 placeholder:text-neutral-300"
+                className="text-neutral-black text-body-r-16 placeholder:text-neutral-300"
                 style={{ outline: "none" }}
                 onChange={onChange}
             />
@@ -28,12 +28,12 @@ function CreateCourseContent({
     onChange
 }:{
     label: string,
-    onChange: (e: any) => void
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }){
     return (
         <div className="flex justify-between w-full bg-neutral-100 items-center" style={{ borderRadius: 20, padding: "20px 32px" }}>
             <div className="text-h2-sb-20">{label}</div>
-            <GlobalButton.AddButton text="파일 업로드" onClick={onChange} />
+            <GlobalButton.AddFile text="파일 업로드" onChange={onChange} />
         </div>
     )
 }

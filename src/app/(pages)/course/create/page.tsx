@@ -2,8 +2,11 @@
 
 import Container from "@/lib/components/container";
 import Components from "./components";
+import GlobalComponents from "@/lib/components/global_components";
+import { useRouter } from "next/navigation";
 
 export default function CreatePage() {
+    const router = useRouter()
     return (
         <Container.MainContainer>
             <div className="flex flex-col w-full gap-9">
@@ -37,6 +40,12 @@ export default function CreatePage() {
                     <Components.CreateCourseContent
                         label="강의계획서"
                         onChange={() => { }}
+                    />
+                </div>
+                <div className="w-64 self-center">
+                    <GlobalComponents.MainButton
+                        text="강의 생성하기"
+                        onClick={() => router.push("/course")}
                     />
                 </div>
             </div>
