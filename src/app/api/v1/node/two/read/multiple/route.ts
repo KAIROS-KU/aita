@@ -3,14 +3,14 @@ import { doc, getDocs } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
-    const { courseId, lectureId, chapterId, nodeOneId } = await request.json() as {
-      courseId: string,
-      lectureId: string,
-      chapterId: string,
+    const { courseID, lectureID, chapterID, nodeOneId } = await request.json() as {
+      courseID: string,
+      lectureID: string,
+      chapterID: string,
       nodeOneId: string
     };
     
-    const nodeRef = getNodeTwoCollection(courseId, lectureId, chapterId, nodeOneId);
+    const nodeRef = getNodeTwoCollection(courseID, lectureID, chapterID, nodeOneId);
     const querySnapshot = await getDocs(nodeRef);
     
     const documents = querySnapshot.docs.map(doc => ({

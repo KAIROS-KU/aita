@@ -11,6 +11,7 @@ type LectureProps = {
     lectureID: string;
     lectureName: string;
     createdAt: Date;
+    fileURL: string;
     chapters?: ChapterProps[];
 }
 

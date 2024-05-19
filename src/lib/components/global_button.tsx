@@ -5,10 +5,10 @@ function AddButton({
     onClick
 }: {
     text: string,
-    onClick: () => void
+    onClick: (e?: any) => void
 }) {
     return (
-        <button onClick={onClick} className="flex items-center p-3 rounded-xl gap-1 bg-neutral-white w-fit">
+        <button onClick={onClick} className="flex-shrink-0 flex items-center p-3 rounded-xl gap-1 bg-neutral-white w-fit">
             <GlobalIcon.Add />
             <div className="text-body-r-12">{text}</div>
         </button>
@@ -23,7 +23,7 @@ function AddFile({
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }) {
     return (
-        <label htmlFor="file">
+        <label htmlFor="file" className="flex-shrink-0">
             <div className="flex items-center p-3 rounded-xl gap-1 bg-neutral-white w-fit">
                 <GlobalIcon.Add />
                 <div className="text-body-r-12">{text}</div>
@@ -61,10 +61,46 @@ function SeeTree({
     )
 }
 
+function MainButton({
+    text,
+    onClick
+}: {
+    text: string,
+    onClick: () => void
+}) {
+    return (
+        <button
+            onClick={onClick}
+            className="w-full h-12 bg-main-red text-neutral-white text-h2-sb-16 rounded-xl flex-shrink-0"
+        >
+            {text}
+        </button>
+    )
+}
+
+function SubButton({
+    text,
+    onClick
+}: {
+    text: string,
+    onClick: () => void
+}) {
+    return (
+        <button
+            onClick={onClick}
+            className="w-full h-12 bg-main-100 text-main-red text-h2-sb-16 rounded-xl flex-shrink-0"
+        >
+            {text}
+        </button>
+    )
+}
+
 const GlobalButton = {
     AddButton,
     AddFile,
-    SeeTree
+    SeeTree,
+    MainButton,
+    SubButton
 }
 
 export default GlobalButton;

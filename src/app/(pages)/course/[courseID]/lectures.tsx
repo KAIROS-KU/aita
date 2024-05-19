@@ -4,6 +4,9 @@ import formatDate from "@/lib/utils/format_date";
 import { Timestamp } from "firebase/firestore";
 import Button from "./button";
 import GlobalButton from "@/lib/components/global_button";
+import Modal from "@/lib/components/modal";
+import { useState } from "react";
+import GlobalComponents from "@/lib/components/global_components";
 
 function LectureItem({
     lectureName,
@@ -37,8 +40,54 @@ function LectureItem({
     );
 }
 
+function AddLectureModal({
+    open,
+    onClose,
+    onClick
+}: {
+    open: boolean,
+    onClose: () => void,
+    onClick: (e: string, file: File) => void
+}) {
+    const [lectureName, setLectureName] = useState("")
+    const [file, setFile] = useState<File>({} as File)
+
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            const selectedFile = files[0];
+            setFile(selectedFile);
+        }
+    };
+
+    return (
+        <Modal open={open} onClose={onClose}>
+            <div className="flex flex-col justify-between h-full">
+                <div className="flex flex-col gap-4">
+                    <div className="text-h2-sb-20">강의자료 추가하기</div>
+                    <div className="flex gap-3">
+                        <GlobalComponents.InputField placeholder="강의자료 이름" onChange={e => setLectureName(e)} />
+                        <GlobalButton.AddFile text="강의자료 추가" onChange={handleFileChange} />
+                    </div>
+                    <div className="text-body-m-14 self-center">{file.name || "파일을 업로드해주세요"}</div>
+                </div>
+                <GlobalButton.MainButton text="추가하기" onClick={() => onClick(lectureName, file)} />
+            </div>
+        </Modal>
+    );
+}
+
+function PDFViewer({ fileURL }: { fileURL: string }) {
+    return (
+        <embed src={fileURL} className="w-full h-full" />
+    );
+};
+
 const Lectures = {
-    LectureItem
+    LectureItem,
+    AddLectureModal,
+    PDFViewer
 }
 
 export default Lectures;

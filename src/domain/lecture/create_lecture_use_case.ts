@@ -1,31 +1,34 @@
 import route from "@/types/route";
 
-export default class CreateCourseUseCase {
+export default class CreateLectureUseCase {
     async create(
+        courseID: string,
         lectureName: string,
         file: File
-    ): Promise<Response> {
-        const path = `/courseID/lectureID/file`
+    ): Promise<ApiResponse> {
+        const formData = new FormData();
+        formData.append("path", `course/${courseID}/lectures/${lectureName}`);
+        formData.append("file", file);
+
         const fileRes = await fetch(`${route}/api/v1/file/upload`, {
             method: "POST",
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                path,
-                file
-            }),
-        })
+            body: formData
+        });
 
         const fileURL = await fileRes.json().then((res) => {
             return res.data
         })
-        const res = await fetch(`${route}/api/v1/course/create`, {
+        
+        const res = await fetch(`${route}/api/v1/lecture/create`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                courseID,
                 lectureName,
                 fileURL
             }),
         })
-        return res.json()
+        const data: ApiResponse = await res.json();
+        return data;
     }
 }

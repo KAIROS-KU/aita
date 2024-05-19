@@ -1,13 +1,16 @@
 "use client"
 
+import SignInUseCase from "../../../domain/user/sign_in_use_case";
 import Container from "@/lib/components/container";
 import { useRouter } from "next/navigation";
 
 export default function LogInPage() {
     const router = useRouter()
 
-    const signIn = (signInData: LogInProps) => {
-        router.push("/course")
+    const signIn = async (signInData: LogInProps) => {
+        const use_case = new SignInUseCase()
+        const res = await use_case.signIn(signInData.email, signInData.password)
+        if (res.success) router.push("/course")
     }
 
     return (

@@ -49,7 +49,7 @@ function LogInContainer({
                             placeholder="비밀번호"
                         />
                     </div>
-                    <GlobalComponents.MainButton
+                    <GlobalButton.MainButton
                         text="로그인"
                         onClick={() => onClick(input)}
                     />
@@ -80,7 +80,7 @@ function SignUpContainer({
         email: "",
         password: "",
         userName: "",
-        profileImage: {} as File | Blob
+        profileImage: {} as File
     })
 
     const [image, setImage] = useState({
@@ -88,20 +88,18 @@ function SignUpContainer({
         alt: ""
     })
 
-    const router = useRouter();
-
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const fileURL = URL.createObjectURL(file);
-            setImage({ src: fileURL, alt: file.name });
-            setInput({ ...input, profileImage: file });
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            const selectedFile = files[0];
+            const fileURL = URL.createObjectURL(selectedFile);
+            setImage({ src: fileURL, alt: selectedFile.name });
+            setInput({ ...input, profileImage: selectedFile });
         }
     };
 
     const signUp = (input: SignUpProps) => {
         onClick(input);
-        router.push("/course");
     }
 
     return (
@@ -171,7 +169,7 @@ function SignUpContainer({
                             placeholder="비밀번호"
                         />
                     </div>
-                    <GlobalComponents.MainButton
+                    <GlobalButton.MainButton
                         text="계정 만들기"
                         onClick={() => signUp(input)}
                     />
@@ -185,7 +183,7 @@ function SignUpContainer({
 function WideContainer({ children }: { children: ReactNode }) {
     const [onButton, setOnButton] = useState<OnButton>("home")
     return (
-        <div className="w-full h-screen flex">
+        <div className="w-full h-screen flex" style={{ overflow: "hidden" }}>
             <Navigation.Short onButton={onButton} />
             <div className="px-10 py-12 w-full h-full">
                 {children}

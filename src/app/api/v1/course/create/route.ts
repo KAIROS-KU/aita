@@ -1,11 +1,10 @@
-import { getCourseCollection } from "@/firebase";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { db, getCourseCollection } from "@/firebase";
+import { collection, doc, setDoc, Timestamp } from "firebase/firestore";
 import { cookies } from "next/headers";
 
-export async function POST(request:Request) {
+export async function POST(request: Request) {
   try {
-    const { courseID, courseName, courseCode, syllabusFile, profName } = await request.json() as {
-      courseID: string,
+    const { courseName, courseCode, syllabusFile, profName } = await request.json() as {
       courseName: string,
       courseCode: string,
       syllabusFile: string,
@@ -13,21 +12,30 @@ export async function POST(request:Request) {
     };
 
     const cookieStore = cookies();
-    const userId = cookieStore.get("userId")?.value;
+    const userID = cookieStore.get("userID")?.value;
+    if (!userID) return new Response(
+      JSON.stringify({
+        success: false,
+        message: "로그인이 필요합니다",
+        data: cookieStore
+      })
+    );
+  
     const createdAt = Timestamp.fromDate(new Date());
-    
+
     const courseCollection = getCourseCollection();
     const courseRef = doc(courseCollection);
-    
-    await setDoc(courseRef, {
-      userID: userId,
-      courseID: courseID,
+
+    const courseData = {
+      userID: userID,
       courseName: courseName,
-      courseCode:courseCode,
-      syllabusFile: syllabusFile,
+      courseCode: courseCode,
+      // syllabusFile: syllabusFile,
       profName: profName,
       createdAt: createdAt,
-    });
+    }
+
+    await setDoc(courseRef, courseData);
 
     return new Response(
       JSON.stringify({

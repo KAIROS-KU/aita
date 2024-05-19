@@ -2,7 +2,7 @@
 
 import GlobalButton from "@/lib/components/global_button"
 import GlobalComponents from "@/lib/components/global_components"
-import { useState } from "react"
+import { ChangeEvent, useState } from "react"
 
 function CourseContentToggle({
     lectureName
@@ -62,12 +62,14 @@ function BreadCrumbs({
 }
 
 function Select({
-    text
+    text,
+    onClick
 }: {
-    text: string
+    text: string,
+    onClick: (e: any) => void
 }) {
     return (
-        <div className="flex gap-3 bg-main-100" style={{ padding: "6px 10px", borderRadius: 6 }}>
+        <div onClick={onClick} className="flex gap-3 bg-main-100 flex-shrink-0" style={{ padding: "6px 10px", borderRadius: 6 }}>
             <div className="text-main-700 text-h3-m-14">{text}</div>
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path d="M10 17.5C14.1421 17.5 17.5 14.1421 17.5 10C17.5 5.85786 14.1421 2.5 10 2.5C5.85786 2.5 2.5 5.85786 2.5 10C2.5 14.1421 5.85786 17.5 10 17.5Z" stroke="#734E4E" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -86,7 +88,7 @@ function CreateNodeButton({
     onClick: (e: any) => void
 }) {
     return (
-        <button onClick={onClick} className="bg-main-linear h-10 flex gap-3 items-center" style={{ padding: "6px 10px", borderRadius: 10 }}>
+        <button onClick={onClick} className="flex-shrink-0 bg-main-linear h-10 flex gap-3 items-center" style={{ padding: "6px 10px", borderRadius: 10 }}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M20 14V19C20 19.5523 19.5523 20 19 20H5C4.44772 20 4 19.5523 4 19V5C4 4.44772 4.44772 4 5 4H10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M10 14H13L22 5L19 2L10 11V14Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -99,15 +101,23 @@ function CreateNodeButton({
 
 function QnA({
     question,
-    answer,
     answerData,
-    pinStatus
+    pinClick
 }: {
     question: string,
-    answer: string,
-    answerData: { title: string, contents: string }[],
-    pinStatus: boolean
+    answerData: { title: string, contents: string, pin: boolean }[],
+    pinClick: (e: { index: number, title: string, contents: string, pin: boolean }) => void
 }) {
+
+    const handlePin = (data: any, index: number) => {
+        const newData = {
+            index: index,
+            title: data.title,
+            contents: data.contents,
+            pin: !data.pin
+        }
+        pinClick(newData)
+    }
     return (
         <div className="flex flex-col">
             <div className="flex gap-5 items-center" style={{ padding: "10px 0" }}>
@@ -115,14 +125,13 @@ function QnA({
                 <div className="text-body-m-16">{question}</div>
             </div>
             <div className="flex flex-col justify-end">
-                <div className="flex gap-5 items-center" style={{ padding: "10px 0" }}>
+                <div className="flex gap-5 items-start justify-start" style={{ padding: "10px 0" }}>
                     <div className="text-neutral-700 bg-neutral-300 text-h2-sb-24 flex justify-center items-center w-11 h-11 rounded-full">A</div>
-                    <div className="text-body-r-16">{answer}</div>
-                </div>
-                <div className="flex flex-col gap-3 ml-16">
-                    {answerData?.map((data, index) => (
-                        <GlobalComponents.Toggle key={index} title={data.title} contents={data.contents} pinStatus={pinStatus} />
-                    ))}
+                    <div className="flex flex-col gap-3 w-full">
+                        {answerData?.map((data, index) => (
+                            <GlobalComponents.Toggle key={index} title={data.title} contents={data.contents} pinStatus={data.pin} pinClick={() => handlePin(data, index)} />
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
@@ -139,10 +148,24 @@ function PromptInput({
         sendPrompt(prompt)
         setPrompt("")
     }
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value
+        setPrompt(value)
+    }
+
+    const handleEnter = (e: any) => {
+        if (e.key === "Enter") {
+            clickSendPrompt()
+        }
+    }
     return (
         <div className="border-2 border-neutral-300 p-5 flex gap-3" style={{ borderRadius: 20 }}>
             <input
                 className="flex-grow outline-none"
+                onChange={handleChange}
+                value={prompt}
+                onKeyPress={handleEnter}
             />
             <div onClick={clickSendPrompt} className="w-12 h-12 flex justify-center items-center bg-main-red" style={{ borderRadius: 10 }}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
@@ -161,22 +184,32 @@ type Node = {
 function NodeMap({
     createNode,
     seeTree,
-    nodes
+    nodes,
+    deliverNewNodes
 }: {
     createNode: (nodes: Node[]) => void,
     seeTree: () => void,
-    nodes: Node[]
+    nodes: string[],
+    deliverNewNodes: (nodes: Node[]) => void
 }) {
+
+    const deleteNode = (index: number) => {
+        const newNodes: any = [...nodes]
+        newNodes.splice(index, 1)
+        deliverNewNodes(newNodes)
+    }
     return (
         <div className="flex gap-3 items-center">
-            <div className="flex gap-3 items-center border border-neutral-300 rounded-xl w-full" style={{ padding: "6px 8px" }}>
-                <GlobalComponents.Pin onOff={true} />
-                <div className="flex flex-grow">
-                    {nodes.map((node, index) => (
-                        <Select key={index} text={node.title} />
-                    ))}
+            <div className="flex gap-3 justify-between items-center border border-neutral-300 rounded-xl w-full" style={{ padding: "6px 8px" }}>
+                <div className="flex gap-3 items-center">
+                    <GlobalComponents.Pin onOff={true} />
+                    <div className="flex flex-grow gap-2" style={{ overflowX: "scroll", maxWidth: "22vw" }}> {/* TODO: change 25vw to actual size */}
+                        {nodes.map((node, index) => (
+                            <Select key={index} text={node} onClick={() => deleteNode(index)} />
+                        ))}
+                    </div>
                 </div>
-                <CreateNodeButton text="노드 만들기" onClick={createNode} />
+                <div className="flex justify-self-end"><CreateNodeButton text="트리 만들기" onClick={createNode} /></div>
             </div>
             <GlobalButton.SeeTree text="질문트리" onClick={seeTree} />
         </div>

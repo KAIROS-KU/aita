@@ -1,21 +1,28 @@
+import { LectureProps } from "@/app/sample_data";
 import { getLectureCollection } from "@/firebase";
 import { getDocs } from "firebase/firestore";
 
-export async function POST(request:Request) {
+export async function POST(request: Request) {
   try {
-    const { courseId } = await request.json() as {
-      courseId: string
+    const { courseID } = await request.json() as {
+      courseID: string
     };
-    
-    const lectureRef = getLectureCollection(courseId);
+
+    const documents: any[] = []
+    const lectureRef = getLectureCollection(courseID);
     const querySnapshot = await getDocs(lectureRef);
 
-    const documents = querySnapshot.docs.map(doc => ({
-      lectureId: doc.data().lectureId,
-      lectureName: doc.data().lectureName,
-      fileUrl: doc.data().fileUrl
-    }))
-    
+    querySnapshot.forEach(
+      (doc) => {
+        documents.push(
+          {
+            ...doc.data(),
+            lectureID: doc.id
+          }
+        )
+      }
+    )
+
     return new Response(
       JSON.stringify({
         success: true,

@@ -12,13 +12,13 @@ export async function PUT(request:Request) {
     };
 
     const cookieStore = cookies();
-    const userId = cookieStore.get("userId")?.value;
+    const userID = cookieStore.get("userID")?.value;
 
     const userCollection = getUserCollection();
-    const userRef = doc(userCollection, userId);
+    const userRef = doc(userCollection, userID);
 
     await setDoc(userRef, {
-      userId: userId,
+      userID: userID,
       email: email,
       userName: userName,
       profilePic: profilePic,

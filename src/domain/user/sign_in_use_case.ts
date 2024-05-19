@@ -1,18 +1,16 @@
 import route from "@/types/route";
 
 export default class SignInUseCase {
-    async signIn(
-        id: string,
-        pwd: string
-    ): Promise<Response> {
+    async signIn(email: string, pwd: string): Promise<{ success: boolean; message: string; data: any; }> {
         const res = await fetch(`${route}/api/v1/auth/signin`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                id,
+                email,
                 pwd
             }),
-        })
-        return res.json()
+        });
+        const data = await res.json();
+        return data;
     }
 }

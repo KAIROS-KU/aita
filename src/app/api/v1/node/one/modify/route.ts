@@ -3,15 +3,15 @@ import { doc, setDoc } from "firebase/firestore";
 
 export async function PUT(request:Request) {
   try {
-    const { courseId, lectureId, chapterId, title, detail } = await request.json() as {
-      courseId: string,
-      lectureId: string,
-      chapterId: string,
+    const { courseID, lectureID, chapterID, title, detail } = await request.json() as {
+      courseID: string,
+      lectureID: string,
+      chapterID: string,
       title: string,
       detail: string
     };
 
-    const nodeCollection = getNodeOneCollection(courseId, lectureId, chapterId);
+    const nodeCollection = getNodeOneCollection(courseID, lectureID, chapterID);
     const nodeRef = doc(nodeCollection);
 
     await setDoc(nodeRef, {

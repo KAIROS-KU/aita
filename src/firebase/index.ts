@@ -25,27 +25,27 @@ export function getUserCollection() {
 export function getCourseCollection() {
   return collection(db, "course");
 }
-export function getLectureCollection(courseId: string) {
-  return collection(db, "course", courseId, "lecture");
+export function getLectureCollection(courseID: string) {
+  return collection(db, "course", courseID, "lecture");
 }
-export function getChapterCollection(courseId: string, lectureId: string) {
-  return collection(db, "course", courseId, "lecture", lectureId, "chapter");
+export function getChapterCollection(courseID: string, lectureID: string) {
+  return collection(db, "course", courseID, "lecture", lectureID, "chapter");
 }
-export function getNodeOneCollection(courseId: string, lectureId: string, chapterId: string) {
-  return collection(db, "course", courseId, "lecture", lectureId, "chapter", chapterId, "node");
+export function getNodeOneCollection(courseID: string, lectureID: string, chapterID: string) {
+  return collection(db, "course", courseID, "lecture", lectureID, "chapter", chapterID, "node");
 }
-export function getNodeTwoCollection(courseId: string, lectureId: string, chapterId: string, nodeOneId: string){
-  return collection(db, "course", courseId, "lecture", lectureId, "chapter", chapterId, "node_one", nodeOneId, "node_two");
+export function getNodeTwoCollection(courseID: string, lectureID: string, chapterID: string, nodeOneId: string){
+  return collection(db, "course", courseID, "lecture", lectureID, "chapter", chapterID, "node_one", nodeOneId, "node_two");
 }
-export function getLectureDoc(courseId: string, lectureId: string) {
-  return doc(db, "course", courseId, "lecture", lectureId)
+export function getLectureDoc(courseID: string, lectureID: string) {
+  return doc(db, "course", courseID, "lecture", lectureID)
 }
-export function getChapterDoc(courseId: string, lectureId: string, chapterId: string) {
-  return doc(db, "course", courseId, "lecture", lectureId, "chapter", chapterId)
+export function getChapterDoc(courseID: string, lectureID: string, chapterID: string) {
+  return doc(db, "course", courseID, "lecture", lectureID, "chapter", chapterID)
 }
-export function getNodeOneDoc(courseId: string, lectureId: string, chapterId: string, nodeOneId: string) {
-  return doc(db, "course", courseId, "lecture", lectureId, "chapter", chapterId, "node_one", nodeOneId)
+export function getNodeOneDoc(courseID: string, lectureID: string, chapterID: string, nodeOneId: string) {
+  return doc(db, "course", courseID, "lecture", lectureID, "chapter", chapterID, "node_one", nodeOneId)
 }
-export function getNodeTwoDoc(courseId: string, lectureId: string, chapterId: string, nodeOneId: string, nodeTwoId: string) {
-  return doc(db, "course", courseId, "lecture", lectureId, "chapter", chapterId, "node_one", nodeOneId, "node_two", nodeTwoId)
+export function getNodeTwoDoc(courseID: string, lectureID: string, chapterID: string, nodeOneId: string, nodeTwoId: string) {
+  return doc(db, "course", courseID, "lecture", lectureID, "chapter", chapterID, "node_one", nodeOneId, "node_two", nodeTwoId)
 }

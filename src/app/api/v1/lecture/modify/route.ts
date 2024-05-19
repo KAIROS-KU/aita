@@ -3,18 +3,18 @@ import { doc, setDoc } from "firebase/firestore";
 
 export async function PUT(request:Request) {
   try {
-    const { courseId, lectureId, lectureName, fileUrl } = await request.json() as {
-      courseId: string,
-      lectureId: string,
+    const { courseID, lectureID, lectureName, fileURL } = await request.json() as {
+      courseID: string,
+      lectureID: string,
       lectureName: string,
-      fileUrl: string[]
+      fileURL: string[]
     };
 
-    const lectureRef = getLectureDoc(courseId, lectureId);
+    const lectureRef = getLectureDoc(courseID, lectureID);
 
     await setDoc(lectureRef, {
       lectureName : lectureName,
-      fileUrl: fileUrl
+      fileURL: fileURL
     });
 
     return new Response(

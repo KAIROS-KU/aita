@@ -1,13 +1,17 @@
 "use client"
 
+import SignUpUseCase from "../../../domain/user/sign_up_use_case";
 import Container from "@/lib/components/container";
 import { useRouter } from "next/navigation";
 
 export default function SignUpPage() {
     const router = useRouter()
 
-    const signUp = (signUpData: SignUpProps) => {
-        router.push("/")
+    const signUp = async (signUpData: SignUpProps) => {
+        const use_case = new SignUpUseCase()
+        const res = await use_case.signUp(signUpData.email, signUpData.userName, signUpData.password, signUpData.profileImage)
+        if (res.success) router.push("/")
+        else alert("회원가입에 실패했습니다. 다시 시도해주세요.")
     }
 
     return (

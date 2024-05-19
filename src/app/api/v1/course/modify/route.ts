@@ -4,8 +4,8 @@ import { cookies} from "next/headers"
 
 export async function PUT(request:Request) {
   try {
-    const { courseId, courseName, courseCode, syllabusFile, profName } = await request.json() as {
-      courseId: string,
+    const { courseID, courseName, courseCode, syllabusFile, profName } = await request.json() as {
+      courseID: string,
       courseName: string,
       courseCode: string,
       syllabusFile: string,
@@ -13,14 +13,14 @@ export async function PUT(request:Request) {
     };
     
     const cookieStore = cookies();
-    const userId = cookieStore.get("userId")?.value;
+    const userID = cookieStore.get("userID")?.value;
     
     const courseCollection = getCourseCollection();
     const courseRef = doc(courseCollection);
         
     await setDoc(courseRef, {
-      userId: userId,
-      courseId: courseId,
+      userID: userID,
+      courseID: courseID,
       courseName: courseName,
       courseCode:courseCode,
       syllabusFile: syllabusFile,

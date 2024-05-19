@@ -12,11 +12,20 @@ export async function POST(request: Request) {
             email,
             pwd
         );
+
+        const uid = data.user.uid
+
+        const headers = new Headers();
+        headers.append(
+            "Set-Cookie",
+            `userID=${uid}; Path=/; HttpOnly; Secure; SameSite=Strict`
+        );
+
         return new Response(
             JSON.stringify({
                 success: true,
                 message: "회원가입에 성공했습니다",
-                data: data
+                data: uid
             })
         );
     } catch (error) {

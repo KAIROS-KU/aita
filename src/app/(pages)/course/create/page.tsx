@@ -4,9 +4,31 @@ import Container from "@/lib/components/container";
 import Components from "./components";
 import GlobalComponents from "@/lib/components/global_components";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import CreateCourseUseCase from "../../../../domain/course/create_course_use_case";
+import GlobalButton from "@/lib/components/global_button";
 
 export default function CreatePage() {
     const router = useRouter()
+
+    const [courseData, setCourseData] = useState({
+        courseName: "",
+        courseCode: "",
+        profName: "",
+        syllabus: {} as File
+    })
+
+    const handleInput = (e: string | File, type: string) => {
+        setCourseData({ ...courseData, [type]: e })
+    }
+
+    const createCourse = async () => {
+        const use_case = new CreateCourseUseCase()
+        const res = await use_case.create(courseData.courseName, courseData.courseCode, courseData.profName, courseData.syllabus)
+        if(res.success) router.push("/course")
+        alert(res.message)
+    }
+
     return (
         <Container.MainContainer>
             <div className="flex flex-col w-full gap-9">
@@ -23,29 +45,29 @@ export default function CreatePage() {
                         <Components.CourseInput
                             label="강의명"
                             placeholder="강의명을 입력해주세요"
-                            onChange={() => { }}
+                            onChange={(e: string) => handleInput(e, "courseName")}
                         />
                         <Components.CourseInput
                             label="학수번호"
                             placeholder="학수번호를 입력해주세요"
-                            onChange={() => { }}
+                            onChange={(e: string) => handleInput(e, "courseCode")}
                         />
                         <Components.CourseInput
                             label="교수명"
                             placeholder="교수명을 입력해주세요"
-                            onChange={() => { }}
+                            onChange={(e: string) => handleInput(e, "profName")}
                         />
                     </div>
 
                     <Components.CreateCourseContent
                         label="강의계획서"
-                        onChange={() => { }}
+                        onChange={(e: File) => handleInput(e, "syllabus")}
                     />
                 </div>
                 <div className="w-64 self-center">
-                    <GlobalComponents.MainButton
+                    <GlobalButton.MainButton
                         text="강의 생성하기"
-                        onClick={() => router.push("/course")}
+                        onClick={createCourse}
                     />
                 </div>
             </div>

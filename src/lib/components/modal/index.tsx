@@ -42,8 +42,8 @@ export default function Modal({
             <div className="w-full flex justify-end">
                 <div style={{ padding: 7 }} onClick={onClose}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
-                        <path d="M16 1L1 16" stroke="#8E8C8C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                        <path d="M15.75 15.75L1.25 1.25001" stroke="#8E8C8C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M16 1L1 16" stroke="#8E8C8C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M15.75 15.75L1.25 1.25001" stroke="#8E8C8C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </div>
             </div>
