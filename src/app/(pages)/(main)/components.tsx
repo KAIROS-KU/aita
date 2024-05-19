@@ -7,11 +7,16 @@ import { useRouter } from "next/navigation";
 function LogInErrorModal({
     open,
     onClose,
-    text
+    text,
+    buttonText
 }: {
     open: boolean,
     onClose: () => void,
-    text: string
+    text: string,
+    buttonText: {
+        main: string,
+        sub: string
+    }
 }) {
     const router = useRouter()
     return (
@@ -20,8 +25,12 @@ function LogInErrorModal({
                 <div className="flex flex-col gap-8">
                     <div className="text-h2-sb-20">{text}</div>
                     <div className="flex flex-col gap-3">
-                        <GlobalButton.SubButton text="회원가입하기" onClick={() => router.push("/sign-up")} />
-                        <GlobalButton.MainButton text="다시 로그인하기" onClick={onClose} />
+                        <GlobalButton.SubButton text={buttonText.sub} onClick={
+                            buttonText.sub === "로그인하기"
+                                ? () => router.push("/sign-up")
+                                : () => router.push("/")
+                        } />
+                        <GlobalButton.MainButton text={buttonText.main} onClick={onClose} />
                     </div>
                 </div>
             </div>

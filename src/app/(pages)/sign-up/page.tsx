@@ -5,16 +5,52 @@ import Container from "@/lib/components/container";
 import Loader from "@/lib/components/loader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Components from "../(main)/components";
 
 export default function SignUpPage() {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
+    const [modal, setModal] = useState({
+        open: false,
+        text: ""
+    })
 
     const signUp = async (signUpData: SignUpProps) => {
+        if (!signUpData.email || !signUpData.userName || !signUpData.password) {
+            setModal({
+                open: true,
+                text: "이메일, 이름, 비밀번호를 입력해주세요."
+            })
+            return
+        }
         setLoading(true)
         const use_case = new SignUpUseCase()
         const res = await use_case.signUp(signUpData.email, signUpData.userName, signUpData.password, signUpData.profileImage)
-        if (res.success) router.push("/")
+        if (res.success) {
+            setModal({
+                open: true,
+                text: "회원가입이 완료되었습니다."
+            })
+            setTimeout(() => {
+                router.push("/")
+            }, 3000);
+        }
+        else if (res.data.code.includes("weak-password")) setModal({
+            open: true,
+            text: "더 어려운 비밀번호를 입력해주세요."
+        })
+        else if (res.data.code.includes("invalid-credential")) setModal({
+            open: true,
+            text: "이메일과 비밀번호가 올바르지 않습니다."
+        })
+        else if (res.data.code.includes("invalid-email")) setModal({
+            open: true,
+            text: "이메일 형식이 올바르지 않습니다."
+        })
+        else if (res.data.code.includes("email-already-in-use")) setModal({
+            open: true,
+            text: "이미 사용중인 이메일입니다."
+        })
         else alert("회원가입에 실패했습니다. 다시 시도해주세요.")
         setLoading(false)
     }
@@ -32,6 +68,15 @@ export default function SignUpPage() {
                 </div>
             </div>
             {loading && <Loader />}
+            {modal && <Components.LogInErrorModal
+                open={modal.open}
+                onClose={() => setModal({ open: false, text: "" })}
+                text={modal.text}
+                buttonText={{
+                    main: "다시 시도하기",
+                    sub: "로그인하기"
+                }}
+            />}
         </Container.SignUpContainer>
     )
 }

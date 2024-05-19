@@ -34,8 +34,6 @@ export default class SignUpUseCase {
 
         const fileURL = storageResponse.data
 
-        console.log(uid, email, userName, fileURL)
-
         const createUserRes = await fetch(`${route}/api/v1/user/create`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },

@@ -47,7 +47,15 @@ export default function LogInPage() {
                 </svg>
             </div>
             {loading && <Loader />}
-            {modal && <Components.LogInErrorModal open={modal.open} onClose={() => setModal({open: false,text: ""})} text={modal.text} />}
+            {modal && <Components.LogInErrorModal
+                open={modal.open}
+                onClose={() => setModal({ open: false, text: "" })}
+                text={modal.text}
+                buttonText={{
+                    main: "간단하게 회원가입하기",
+                    sub: "다시 로그인하기"
+                }}
+            />}
         </Container.LogInContainer>
     )
 }
