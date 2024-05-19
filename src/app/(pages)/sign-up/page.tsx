@@ -2,16 +2,21 @@
 
 import SignUpUseCase from "../../../domain/user/sign_up_use_case";
 import Container from "@/lib/components/container";
+import Loader from "@/lib/components/loader";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function SignUpPage() {
     const router = useRouter()
+    const [loading, setLoading] = useState(false)
 
     const signUp = async (signUpData: SignUpProps) => {
+        setLoading(true)
         const use_case = new SignUpUseCase()
         const res = await use_case.signUp(signUpData.email, signUpData.userName, signUpData.password, signUpData.profileImage)
         if (res.success) router.push("/")
         else alert("회원가입에 실패했습니다. 다시 시도해주세요.")
+        setLoading(false)
     }
 
     return (
@@ -26,6 +31,7 @@ export default function SignUpPage() {
                     </svg>
                 </div>
             </div>
+            {loading && <Loader />}
         </Container.SignUpContainer>
     )
 }

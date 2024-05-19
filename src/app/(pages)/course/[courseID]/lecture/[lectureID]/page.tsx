@@ -8,29 +8,35 @@ import ReadLectureUseCase from "../../../../../../domain/lecture/read_lecture_us
 import { useEffect, useState } from "react"
 import ReadCourseUseCase from "../../../../../../domain/course/read_course_use_case"
 import Lectures from "../../lectures"
+import Loader from "@/lib/components/loader"
 
 export default function LectureItem() {
     const params = useParams()
     const router = useRouter()
     const courseID = params.courseID as string
     const lectureID = params.lectureID as string
+    const [loading, setLoading] = useState(false)
     const [lecture, setLecture] = useState({} as LectureProps)
     const [courses, setCourses] = useState({} as CourseProps)
     const [qna, setQna] = useState<{ question: string, nodes: any }[]>([])
     const [nodes, setNodes] = useState<any[]>([])
 
     const readCourse = async () => {
+        setLoading(true)
         const use_case = new ReadCourseUseCase()
         const res = await use_case.read(courseID)
         if (!res.success) alert("일시적인 오류가 발생했습니다. 관리자에게 문의주세요.")
         setCourses(res.data)
+        setLoading(false)
     }
 
     const readLecture = async () => {
+        setLoading(true)
         const use_case = new ReadLectureUseCase()
         const res = await use_case.read(courseID, lectureID)
         if (!res.success) alert("일시적인 오류가 발생했습니다. 관리자에게 문의주세요.")
         setLecture(res.data)
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -123,6 +129,7 @@ export default function LectureItem() {
                     />
                 </div>
             </div>
+            {loading && <Loader />}
         </Container.WideContainer>
     )
 }

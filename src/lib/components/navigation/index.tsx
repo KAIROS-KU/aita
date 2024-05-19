@@ -119,7 +119,6 @@ function Short({
     const [open, setOpen] = useState(false)
     const checkUser = async () => {
         const response = await check_user_auth_use_case.check()
-        console.log(response)
         if (!response.success) setOpen(true)
     }
 

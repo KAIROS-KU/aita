@@ -20,8 +20,7 @@
     "react-d3-tree": "^3.6.2",
     "react-dom": "^18",
     "react-tree-graph": "^8.0.2",
-    "reactflow": "^11.11.3",
-    "recoil": "^0.7.7"
+    "reactflow": "^11.11.3"
   },
   "devDependencies": {
     "@types/node": "^20",

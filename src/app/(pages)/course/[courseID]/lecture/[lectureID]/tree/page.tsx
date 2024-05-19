@@ -4,7 +4,6 @@ import Container from "@/lib/components/container";
 import SampleData from "@/app/sample_data";
 import GlobalComponents from "@/lib/components/global_components";
 import Tree from "./components";
-import NodeTypes from "./node";
 
 export default function Home() {
     return (

@@ -7,9 +7,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CreateCourseUseCase from "../../../../domain/course/create_course_use_case";
 import GlobalButton from "@/lib/components/global_button";
+import Loader from "@/lib/components/loader";
 
 export default function CreatePage() {
     const router = useRouter()
+    const [loading, setLoading] = useState(false)
 
     const [courseData, setCourseData] = useState({
         courseName: "",
@@ -23,10 +25,12 @@ export default function CreatePage() {
     }
 
     const createCourse = async () => {
+        setLoading(true)
         const use_case = new CreateCourseUseCase()
         const res = await use_case.create(courseData.courseName, courseData.courseCode, courseData.profName, courseData.syllabus)
         if(res.success) router.push("/course")
         alert(res.message)
+        setLoading(false)
     }
 
     return (
@@ -71,6 +75,7 @@ export default function CreatePage() {
                     />
                 </div>
             </div>
+            {loading && <Loader />}
         </Container.MainContainer>
     )
 }
