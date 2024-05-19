@@ -53,6 +53,7 @@ function NodeItem({
                 title={data.title}
                 contents={data.detail}
                 pinStatus={"none"}
+                pinClick={() => { }}
             />
         </div>
     )
