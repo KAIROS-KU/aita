@@ -5,16 +5,37 @@ import Container from "@/lib/components/container";
 import Loader from "@/lib/components/loader";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Components from "./components";
 
 export default function LogInPage() {
     const router = useRouter()
     const [loading, setLoading] = useState(false)
+    const [modal, setModal] = useState({
+        open: false,
+        text: ""
+    })
 
     const signIn = async (signInData: LogInProps) => {
+        if (!signInData.email || !signInData.password) {
+            setModal({
+                open: true,
+                text: "이메일과 비밀번호를 입력해주세요."
+            })
+            return
+        }
         setLoading(true)
         const use_case = new SignInUseCase()
         const res = await use_case.signIn(signInData.email, signInData.password)
+        console.log(res)
         if (res.success) router.push("/course")
+        else if (res.data.includes("invalid-credential")) setModal({
+            open: true,
+            text: "이메일과 비밀번호가 올바르지 않습니다."
+        })
+        else if (res.data.includes("invalid-email")) setModal({
+            open: true,
+            text: "이메일 정보가 올바르지 않습니다."
+        })
         setLoading(false)
     }
 
@@ -26,6 +47,7 @@ export default function LogInPage() {
                 </svg>
             </div>
             {loading && <Loader />}
+            {modal && <Components.LogInErrorModal open={modal.open} onClose={() => setModal({open: false,text: ""})} text={modal.text} />}
         </Container.LogInContainer>
     )
 }
