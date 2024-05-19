@@ -1,24 +1,28 @@
 import { getUserCollection } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { cookies } from "next/headers";
 
-export async function POST(request:Request) {
+export async function PUT(request:Request) {
   try {
-    const { userID, email , userName, profilePic, courseURL } = await request.json() as {
-      userID: string,
+    const { email, userName, profilePic, courseUrl } = await request.json() as {
       email: string,
       userName: string,
       profilePic: string,
-      courseURL: string
+      courseUrl: string
     };
-    const userCollection = getUserCollection();
-    const UserRef = doc(userCollection);
 
-    await setDoc(UserRef, {
-      userID: userID,
+    const cookieStore = cookies();
+    const userId = cookieStore.get("userId")?.value;
+
+    const userCollection = getUserCollection();
+    const userRef = doc(userCollection, userId);
+
+    await setDoc(userRef, {
+      userId: userId,
       email: email,
       userName: userName,
       profilePic: profilePic,
-      courseURL: courseURL
+      courseUrl: courseUrl
     });
 
     return new Response(

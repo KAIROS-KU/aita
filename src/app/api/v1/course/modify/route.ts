@@ -1,21 +1,30 @@
 import { getCourseCollection } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { cookies} from "next/headers"
 
-export async function POST(request:Request) {
+export async function PUT(request:Request) {
   try {
-    const { userID, courseID, courseName, courseCode, courseFile, syllabusFile, profName, createdAt } = await request.json();
+    const { courseId, courseName, courseCode, syllabusFile, profName } = await request.json() as {
+      courseId: string,
+      courseName: string,
+      courseCode: string,
+      syllabusFile: string,
+      profName: string
+    };
+    
+    const cookieStore = cookies();
+    const userId = cookieStore.get("userId")?.value;
+    
     const courseCollection = getCourseCollection();
     const courseRef = doc(courseCollection);
         
     await setDoc(courseRef, {
-      userID: userID,
-      courseID: courseID,
+      userId: userId,
+      courseId: courseId,
       courseName: courseName,
       courseCode:courseCode,
-      courseFile: courseFile,
       syllabusFile: syllabusFile,
-      profName: profName,
-      createdAt: createdAt
+      profName: profName
     });
 
     return new Response(

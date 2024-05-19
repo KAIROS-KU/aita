@@ -1,25 +1,26 @@
-import { getLectureCollection } from "@/firebase";
+import { getLectureDoc } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
-export async function POST(request:Request) {
+export async function PUT(request:Request) {
   try {
-    const { courseID, lectureName, file } = await request.json() as {
-      courseID: string,
+    const { courseId, lectureId, lectureName, fileUrl } = await request.json() as {
+      courseId: string,
+      lectureId: string,
       lectureName: string,
-      file: string
+      fileUrl: string[]
     };
-    const lectureCollection = getLectureCollection(courseID);
-    const lectureRef = doc(lectureCollection);
-        
+
+    const lectureRef = getLectureDoc(courseId, lectureId);
+
     await setDoc(lectureRef, {
       lectureName : lectureName,
-      file: file
+      fileUrl: fileUrl
     });
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: "LECTURE 생성에 성공했습니다",
+        message: "LECTURE 수정에 성공했습니다",
         data: {}
       })
     );

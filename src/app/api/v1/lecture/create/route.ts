@@ -1,21 +1,25 @@
 import { getLectureCollection } from "@/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
-    const { courseID, lectureName, file } = await request.json() as {
-      courseID: string,
+    const { courseId, lectureName, fileUrl } = await request.json() as {
+      courseId: string,
       lectureName: string,
-      file: string
+      fileUrl: string
     };
-    const lectureCollection = getLectureCollection(courseID);
+    
+    const createdAt = Timestamp.fromDate(new Date());
+
+    const lectureCollection = getLectureCollection(courseId);
     const lectureRef = doc(lectureCollection);
-        
+
     await setDoc(lectureRef, {
       lectureName : lectureName,
-      file: file
+      fileUrl: fileUrl,
+      createdAt: createdAt
     });
-
+    
     return new Response(
       JSON.stringify({
         success: true,

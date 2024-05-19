@@ -1,24 +1,26 @@
 import { getUserCollection } from "@/firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
-    const { userID, email , userName, profilePic, courseURL } = await request.json() as {
-      userID: string,
+    const { email, userName, profilePic, courseUrl } = await request.json() as {
       email: string,
       userName: string,
       profilePic: string,
-      courseURL: string
+      courseUrl: string
     };
-    const userCollection = getUserCollection();
-    const UserRef = doc(userCollection);
 
-    await setDoc(UserRef, {
-      userID: userID,
+    const createdAt = Timestamp.fromDate(new Date());
+
+    const userCollection = getUserCollection();
+    const userRef = doc(userCollection);
+
+    await setDoc(userRef, {
       email: email,
       userName: userName,
       profilePic: profilePic,
-      courseURL: courseURL
+      courseUrl: courseUrl,
+      createdAt: createdAt
     });
 
     return new Response(
