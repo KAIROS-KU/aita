@@ -22,6 +22,12 @@ export default function SignUpPage() {
                 text: "이메일, 이름, 비밀번호를 입력해주세요."
             })
             return
+        } else if (!signUpData.email.endsWith("@korea.ac.kr")) {
+            setModal({
+                open: true,
+                text: "고려대학교 메일(@korea.ac.kr)로 가입해주세요."
+            })
+            return
         }
         setLoading(true)
         const use_case = new SignUpUseCase()
