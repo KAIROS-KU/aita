@@ -11,7 +11,7 @@ function MainContainer({ children }: { children: ReactNode }) {
     
     const [onButton, setOnButton] = useState<OnButton>("home")
     return (
-        <div className="w-full h-full flex">
+        <div className="w-full h-screen box-border flex">
             <Navigation.Full onButton={onButton} />
             <div className="px-16 py-12 w-full h-full">
                 {children}

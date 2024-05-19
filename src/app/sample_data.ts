@@ -1,3 +1,35 @@
+type CourseProps = {
+    courseName: string;
+    courseCode: string;
+    profName: string;
+    createdAt: Date;
+    courseID: string;
+    lectures: LectureProps[];
+}
+
+type LectureProps = {
+    lectureID: string;
+    lectureName: string;
+    createdAt: Date;
+    chapters?: ChapterProps[];
+}
+
+type ChapterProps = {
+    chapterID: string;
+    chapterName: string;
+    createdAt: Date;
+    nodes?: NodeProps[];
+}
+
+type NodeProps = {
+    nodeID: string;
+    title: string;
+    createdAt: Date;
+    detail: string;
+}
+
+export type { CourseProps, LectureProps, ChapterProps, NodeProps }
+
 const SampleData = {
     name: "최어진",
     image: "https://firebasestorage.googleapis.com/v0/b/ai-ta-206f2.appspot.com/o/IMG_0896.jpeg?alt=media&token=4a361b8d-7f27-415e-a2a0-c1c2a95da223",

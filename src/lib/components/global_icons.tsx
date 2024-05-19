@@ -41,12 +41,24 @@ function Tree() {
     )
 }
 
+function File() {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
+            <path d="M8.75 26.25C7.36929 26.25 6.25 25.1307 6.25 23.75V6.25C6.25 4.86929 7.36929 3.75 8.75 3.75H17.5L23.75 10V23.75C23.75 25.1307 22.6307 26.25 21.25 26.25H8.75Z" stroke="#8E8C8C" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M8.75 26.25C7.36929 26.25 6.25 25.1307 6.25 23.75V6.25C6.25 4.86929 7.36929 3.75 8.75 3.75H17.5L23.75 10V23.75C23.75 25.1307 22.6307 26.25 21.25 26.25H8.75Z" stroke="black" strokeOpacity="0.3" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M16.25 3.75V11.25H23.75" stroke="#8E8C8C" strokeWidth="2" strokeLinejoin="round" />
+            <path d="M16.25 3.75V11.25H23.75" stroke="black" strokeOpacity="0.3" strokeWidth="2" strokeLinejoin="round" />
+        </svg>
+    )
+}
+
 const GlobalIcon = {
     Recent,
     Course,
     Arrow,
     Add,
-    Tree
+    Tree,
+    File
 }
 
 export default GlobalIcon
