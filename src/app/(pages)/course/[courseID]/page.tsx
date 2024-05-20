@@ -46,6 +46,7 @@ export default function Home() {
 
 
   const addLecture = async (lectureName: string, file: File) => {
+    if (!lectureName || !file) return alert("모든 항목을 입력해주세요.")
     setLoading(true)
     const create_lecture_use_case = new CreateLectureUseCase();
     const res = await create_lecture_use_case.create(courseID, lectureName, file);

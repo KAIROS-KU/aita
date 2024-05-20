@@ -7,7 +7,6 @@ import { useState } from "react";
 import CreateCourseUseCase from "../../../../domain/course/create_course_use_case";
 import GlobalButton from "@/lib/components/global_button";
 import Loader from "@/lib/components/loader";
-import pdf2img from 'pdf-img-convert';
 
 
 export default function CreatePage() {
@@ -26,6 +25,7 @@ export default function CreatePage() {
     }
 
     const createCourse = async () => {
+        if (!courseData.courseName || !courseData.courseCode || !courseData.profName || !courseData.syllabus) return alert("모든 항목을 입력해주세요.")
         setLoading(true)
         const use_case = new CreateCourseUseCase()
         const res = await use_case.create(courseData.courseName, courseData.courseCode, courseData.profName, courseData.syllabus)
