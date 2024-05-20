@@ -18,7 +18,6 @@ export async function POST(request: Request): Promise<Response> {
                     ## Instruction
 
 
-
 Answer in Korean.
 
 Each content should only consist of title-content format.
