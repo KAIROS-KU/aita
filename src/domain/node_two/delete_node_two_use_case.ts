@@ -1,6 +1,6 @@
 import route from "@/types/route";
 
-export default class DeleteNodeUseCase {
+export default class DeleteNodeTwoUseCase {
     async delete(
         nodeID: string
     ): Promise<Response> {

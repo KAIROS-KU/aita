@@ -7,6 +7,8 @@ import { useState } from "react";
 import CreateCourseUseCase from "../../../../domain/course/create_course_use_case";
 import GlobalButton from "@/lib/components/global_button";
 import Loader from "@/lib/components/loader";
+import pdf2img from 'pdf-img-convert';
+
 
 export default function CreatePage() {
     const router = useRouter()
@@ -20,17 +22,7 @@ export default function CreatePage() {
     })
 
     const handleInput = async (e: string | File, type: string) => {
-        if (type === "syllabus") {
-            const file = e as File
-            const reader = new FileReader()
-            reader.onload = () => {
-                const arrayBuffer = reader.result as ArrayBuffer
-                const uint8Array = new Uint8Array(arrayBuffer)
-                const base64 = Buffer.from(uint8Array).toString("base64")
-            }
-            reader.readAsArrayBuffer(file)
-            console.log(reader)
-        } else setCourseData({ ...courseData, [type]: e })
+        setCourseData({ ...courseData, [type]: e })
     }
 
     const createCourse = async () => {

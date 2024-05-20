@@ -105,15 +105,15 @@ function QnA({
     pinClick
 }: {
     question: string,
-    answerData: { title: string, contents: string, pin: boolean }[],
-    pinClick: (e: { index: number, title: string, contents: string, pin: boolean }) => void
+    answerData: { title: string, detail: string, pin: boolean }[],
+    pinClick: (e: { index: number, title: string, detail: string, pin: boolean }) => void
 }) {
 
     const handlePin = (data: any, index: number) => {
         const newData = {
             index: index,
             title: data.title,
-            contents: data.contents,
+            detail: data.detail,
             pin: !data.pin
         }
         pinClick(newData)
@@ -129,7 +129,7 @@ function QnA({
                     <div className="text-neutral-700 bg-neutral-300 text-h2-sb-24 flex justify-center items-center w-11 h-11 rounded-full">A</div>
                     <div className="flex flex-col gap-3 w-full">
                         {answerData?.map((data, index) => (
-                            <GlobalComponents.Toggle key={index} title={data.title} contents={data.contents} pinStatus={data.pin} pinClick={() => handlePin(data, index)} />
+                            <GlobalComponents.Toggle key={index} title={data.title} contents={data.detail} pinStatus={data.pin} pinClick={() => handlePin(data, index)} />
                         ))}
                     </div>
                 </div>

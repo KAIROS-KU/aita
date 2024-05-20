@@ -2,9 +2,9 @@ import OpenAI from "openai";
 
 export async function POST(request: Request): Promise<Response> {
     try {
-        const { prompt, cropImage } = await request.json() as {
+        const { prompt, fileURL } = await request.json() as {
             prompt: string,
-            cropImage: string
+            fileURL: string
         };
 
         const openai = new OpenAI({
@@ -29,7 +29,7 @@ export async function POST(request: Request): Promise<Response> {
                         },
                         {
                             "type": "image_url",
-                            "image_url": { "url": cropImage }
+                            "image_url": { "url": fileURL }
                         },
                     ],
                 }

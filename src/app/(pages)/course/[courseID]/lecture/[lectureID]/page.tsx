@@ -10,6 +10,7 @@ import ReadCourseUseCase from "../../../../../../domain/course/read_course_use_c
 import Lectures from "../../lectures"
 import Loader from "@/lib/components/loader"
 import ReactCrop, { type Crop } from 'react-image-crop'
+import AnswerPromptUseCase from "../../../../../../domain/gpt/answer_prompt_use_case"
 
 export default function LectureItem() {
     const params = useParams()
@@ -19,7 +20,7 @@ export default function LectureItem() {
     const [loading, setLoading] = useState(false)
     const [lecture, setLecture] = useState({} as LectureProps)
     const [courses, setCourses] = useState({} as CourseProps)
-    const [qna, setQna] = useState<{ question: string, nodes: any }[]>([])
+    const [qna, setQna] = useState<{ question: string, nodes: { index: number, title: string, detail: string, pin: boolean }[] }[]>([])
     const [nodes, setNodes] = useState<any[]>([])
     const [crop, setCrop] = useState<Crop>()
 
@@ -48,27 +49,47 @@ export default function LectureItem() {
     }, [])
 
 
-    const getPromptResponse = (prompt: string) => {
+    const getPromptResponse = async (prompt: string) => {
+        setLoading(true)
+        const use_case = new AnswerPromptUseCase()
+        const response = await use_case.generate(prompt)
+        const data = response.data.map((node: any) => {
+            return {
+                index: node.index,
+                title: node.title,
+                detail: node.detail,
+                pin: false
+            }
+        })
         const newQna = [...qna]
         newQna.push({
-            question: prompt, nodes: [
-                { index: 0, title: "어떠한 질문1", contents: "어떠한 답변1", pin: true },
-                { index: 1, title: "어떠한 질문2", contents: "어떠한 답변2", pin: false }
-            ]
+            question: prompt,
+            nodes: [...data]
         })
         setQna(newQna)
+        setLoading(false)
     }
 
-    const clickPin = (data: { index: number, title: string, contents: string, pin: boolean }, index: number) => {
+    const clickPin = (data: { index: number, title: string, detail: string, pin: boolean }, id: number) => {
         const newQna = [...qna]
-        newQna[index].nodes = newQna[index].nodes.map((node: any) => {
-            if (node.index === data.index) {
-                setNodes([...nodes, node.title])
-                return {
-                    index: node.index,
-                    title: node.title,
-                    contents: node.contents,
-                    pin: !node.pin
+        newQna[id].nodes = newQna[id].nodes.map((node: any) => {
+            if (parseInt(node.index) === data.index) {
+                if (!nodes.includes(node.title)) {
+                    setNodes([...nodes, node.title])
+                    return {
+                        index: node.index,
+                        title: node.title,
+                        detail: node.detail,
+                        pin: !node.pin
+                    }
+                } else {
+                    setNodes(nodes.filter((title: string) => title !== node.title))
+                    return {
+                        index: node.index,
+                        title: node.title,
+                        detail: node.detail,
+                        pin: !node.pin
+                    }
                 }
             }
             return node
@@ -98,10 +119,10 @@ export default function LectureItem() {
                     <div className="w-full flex-grow bg-neutral-200 relative" style={{
                         borderRadius: 20
                     }}>
-                        <ReactCrop crop={crop} onChange={c => {setCrop(c); console.log(c)}}></ReactCrop>
-                            {lecture.fileURL &&
-                                <Lectures.PDFViewer fileURL={lecture.fileURL} />
-                            }
+                        <ReactCrop crop={crop} onChange={c => { setCrop(c); console.log(c) }}></ReactCrop>
+                        {lecture.fileURL &&
+                            <Lectures.PDFViewer fileURL={lecture.fileURL} />
+                        }
                     </div>
                     <div className="absolute" style={{ bottom: 32 }}>
                         <Components.ToolTip />
@@ -118,15 +139,17 @@ export default function LectureItem() {
                             deliverNewNodes={(newNodes: any) => setNodes(newNodes)}
                         />
                     </div>
-                    <div className="flex-grow w-full">
-                        {qna.map((data, index) => (
-                            <Components.QnA
-                                key={index}
-                                question={data.question}
-                                answerData={data.nodes}
-                                pinClick={e => clickPin(e, index)}
-                            />
-                        ))}
+                    <div className="flex flex-col gap-2" style={{ height: 600, overflowY: "scroll" }}>
+                        <div className="flex-grow w-full">
+                            {qna.map((data, index) => (
+                                <Components.QnA
+                                    key={index}
+                                    question={data.question}
+                                    answerData={data.nodes}
+                                    pinClick={data => clickPin(data, index)}
+                                />
+                            ))}
+                        </div>
                     </div>
                     <Components.PromptInput
                         sendPrompt={(e) => getPromptResponse(e)}

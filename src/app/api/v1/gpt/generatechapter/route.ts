@@ -1,29 +1,19 @@
 import OpenAI from "openai";
 
-export async function POST(request: Request): Promise<Response> {
+export async function POST(request: Request) {
     try {
-        const { prompt } = await request.json() as {
-            prompt: string,
-          };
+        const { headlines } = await request.json() as { headlines: string[] };
 
         const openai = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,
-        });
+        });;
 
         const completion = await openai.chat.completions.create({
             messages: [
                 {
                     role: "assistant",
                     content: `
-                    Answer the user's questions in Markdown format.
-                    Each content should only consist of title-detail format.
-                    Construct titles such that the detail can be inferred independently from other title-detail pairs.
-                    Answer in Korean.
                     
-                    Output format:
-                    [{"index": "0", "title":"","detail":""},{"index": "1", "title":"","detail":""}, ...]
-
-                    The user's question is: ${prompt}
                 `,
                 },
             ],
@@ -34,7 +24,7 @@ export async function POST(request: Request): Promise<Response> {
         return new Response(
             JSON.stringify({
                 success: true,
-                message: "답변 생성에 성공했습니다",
+                message: "목차 생성에 성공했습니다",
                 data: content
             }),
         );
@@ -42,7 +32,7 @@ export async function POST(request: Request): Promise<Response> {
         return new Response(
             JSON.stringify({
                 success: true,
-                message: "답변 생성에 실패했습니다",
+                message: "목차 생성에 실패했습니다",
                 data: error
             }),
         );

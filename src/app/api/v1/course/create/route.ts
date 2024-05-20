@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       userID: userID,
       courseName: courseName,
       courseCode: courseCode,
-      // syllabusFile: syllabusFile,
+      syllabusFile: syllabusFile,
       profName: profName,
       createdAt: createdAt,
     }
