@@ -2,7 +2,6 @@
 
 import Container from "@/lib/components/container";
 import Components from "./components";
-import GlobalComponents from "@/lib/components/global_components";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import CreateCourseUseCase from "../../../../domain/course/create_course_use_case";
@@ -20,15 +19,25 @@ export default function CreatePage() {
         syllabus: {} as File
     })
 
-    const handleInput = (e: string | File, type: string) => {
-        setCourseData({ ...courseData, [type]: e })
+    const handleInput = async (e: string | File, type: string) => {
+        if (type === "syllabus") {
+            const file = e as File
+            const reader = new FileReader()
+            reader.onload = () => {
+                const arrayBuffer = reader.result as ArrayBuffer
+                const uint8Array = new Uint8Array(arrayBuffer)
+                const base64 = Buffer.from(uint8Array).toString("base64")
+            }
+            reader.readAsArrayBuffer(file)
+            console.log(reader)
+        } else setCourseData({ ...courseData, [type]: e })
     }
 
     const createCourse = async () => {
         setLoading(true)
         const use_case = new CreateCourseUseCase()
         const res = await use_case.create(courseData.courseName, courseData.courseCode, courseData.profName, courseData.syllabus)
-        if(res.success) router.push("/course")
+        if (res.success) router.push("/course")
         alert(res.message)
         setLoading(false)
     }

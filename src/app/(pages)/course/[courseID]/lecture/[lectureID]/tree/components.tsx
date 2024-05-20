@@ -1,14 +1,15 @@
-import React, { useMemo } from 'react';
-import ReactFlow, { Controls } from 'reactflow';
+import React, { useEffect, useMemo } from 'react';
+import ReactFlow, { Controls, useEdges } from 'reactflow';
 import NodeTypes from './node';
 import 'reactflow/dist/style.css';
 import { CourseProps } from '@/app/sample_data';
+import ReadEntireTreeUseCase from '../../../../../../../domain/tree/read_entire_course_use_case';
 
 function NodeConverter(currentCourse: CourseProps) {
   const initialNodes: any[] = [];
   const initialEdges: any[] = [];
 
-  currentCourse.lectures.forEach((lecture, lec_id) => {
+  currentCourse.lectures?.forEach((lecture, lec_id) => {
     initialNodes.push({
       id: "lecture" + lec_id.toString(),
       type: 'LectureItem',
@@ -67,7 +68,17 @@ export default function Tree({
 }) {
   const nodeTypes = useMemo(() => NodeTypes, []);
 
-  const { initialNodes, initialEdges} = NodeConverter({ courseID } as CourseProps); // TODO: course - lecture - chapter - node까지 가져오는 유즈케이스 필요
+  const { initialNodes, initialEdges } = NodeConverter({ courseID } as CourseProps); // TODO: all lecture - all chapter - all node까지 가져오는 유즈케이스 필요
+
+  const readTree = async () => {
+    const read_entire_tree_use_case = new ReadEntireTreeUseCase();
+    const treeResponse = await read_entire_tree_use_case.readTree(courseID);
+    console.log(treeResponse)
+  }
+
+  useEffect(() => {
+    readTree();
+  }, [])
 
   return (
     <ReactFlow

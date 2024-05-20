@@ -9,6 +9,7 @@ import { useEffect, useState } from "react"
 import ReadCourseUseCase from "../../../../../../domain/course/read_course_use_case"
 import Lectures from "../../lectures"
 import Loader from "@/lib/components/loader"
+import ReactCrop, { type Crop } from 'react-image-crop'
 
 export default function LectureItem() {
     const params = useParams()
@@ -20,6 +21,8 @@ export default function LectureItem() {
     const [courses, setCourses] = useState({} as CourseProps)
     const [qna, setQna] = useState<{ question: string, nodes: any }[]>([])
     const [nodes, setNodes] = useState<any[]>([])
+    const [crop, setCrop] = useState<Crop>()
+
 
     const readCourse = async () => {
         setLoading(true)
@@ -95,9 +98,10 @@ export default function LectureItem() {
                     <div className="w-full flex-grow bg-neutral-200 relative" style={{
                         borderRadius: 20
                     }}>
-                        {lecture.fileURL &&
-                            <Lectures.PDFViewer fileURL={lecture.fileURL} />
-                        }
+                        <ReactCrop crop={crop} onChange={c => {setCrop(c); console.log(c)}}></ReactCrop>
+                            {lecture.fileURL &&
+                                <Lectures.PDFViewer fileURL={lecture.fileURL} />
+                            }
                     </div>
                     <div className="absolute" style={{ bottom: 32 }}>
                         <Components.ToolTip />
