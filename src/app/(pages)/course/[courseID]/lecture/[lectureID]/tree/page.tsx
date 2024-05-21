@@ -20,8 +20,8 @@ export default function Home() {
         const find_course_use_case = new ReadCourseUseCase();
         const res = await find_course_use_case.read();
         const courses = res.data;
-        const course = courses?.find((course: CourseProps) => course.courseID === courseID);
-        setCourse(course);
+        const courseData = courses?.find((course: CourseProps) => course.courseID === courseID);
+        setCourse(courseData);
         setLoading(false)
       }
 

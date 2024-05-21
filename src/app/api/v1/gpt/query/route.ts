@@ -7,7 +7,7 @@ export async function POST(request: Request): Promise<Response> {
           };
 
         const openai = new OpenAI({
-            apiKey: process.env.OPENAI_API_KEY,
+            apiKey: "sk-proj-jDLH4QsIeM0qVBcceiB1T3BlbkFJpEAMIdhkp4GOn2et2DoW",
         });
 
         const completion = await openai.chat.completions.create({

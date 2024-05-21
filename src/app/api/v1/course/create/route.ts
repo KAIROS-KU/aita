@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       })
     );
   
-    const createdAt = Timestamp.fromDate(new Date());
+    const createdAt = new Date()
 
     const courseCollection = getCourseCollection();
     const courseRef = doc(courseCollection);
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       userID: userID,
       courseName: courseName,
       courseCode: courseCode,
-      syllabusFile: syllabusFile,
+      syllabusFile: syllabusFile || "Unknown",
       profName: profName,
       createdAt: createdAt,
     }

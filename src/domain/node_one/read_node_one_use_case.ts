@@ -2,13 +2,17 @@ import route from "@/types/route";
 
 export default class ReadNodeOneUseCase {
     async read(
-        chapterID: string
-    ): Promise<Response> {
+        courseID: string,
+        lectureID: string,
+        chapterID: string,
+    ): Promise<ApiResponse> {
         const res = await fetch(`${route}/api/v1/node/read`, {
             method: "GET",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                chapterID
+                courseID,
+                lectureID,
+                chapterID,
             }),
         })
         return res.json()

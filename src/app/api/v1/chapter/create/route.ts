@@ -1,5 +1,5 @@
 import { getChapterCollection } from "@/firebase";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 export async function POST(request:Request) {
   try {
@@ -9,10 +9,11 @@ export async function POST(request:Request) {
       chapterName: string
     };
 
-    const createdAt = Timestamp.fromDate(new Date());
+    const createdAt = new Date()
 
     const chapterCollection = getChapterCollection(courseID, lectureID);
     const chapterRef = doc(chapterCollection);
+    const chapterID = chapterRef.id;
 
     await setDoc(chapterRef, {
       chapterName: chapterName,
@@ -23,7 +24,7 @@ export async function POST(request:Request) {
       JSON.stringify({
         success: true,
         message: "CHAPTER 생성에 성공했습니다",
-        data: {}
+        data: {chapterID: chapterID}
       })
     );
   } catch (error) {

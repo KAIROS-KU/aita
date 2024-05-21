@@ -1,44 +1,41 @@
 import route from "@/types/route";
 
 export default class CreateLectureAndGenerateChaptersUseCase {
-    async convertToImageArray(
-        pdfFile: File
-    ): Promise<ApiResponse> {
-        const imageArray: File[] = []
-
-        return {
-            data: imageArray,
-            success: true,
-            message: "pdf 변환에 성공했습니다"
-        }
-    }
-
-
     async createLecture(
         courseID: string,
         lectureName: string,
-        file: File[]
-    ): Promise<ApiResponse> {
+        lectureID: string,
+        textPair: { file: File, text: string }[]
+    ) {
+        const uploadFilesAndGetUrls = async (textPair: { file: File, text: string }[], courseID: string, lectureName: string) => {
+            console.log(textPair)
+            const fileURLArray = await Promise.all(
+                textPair.map(async (file, index) => {
+                    console.log(file);
+                    const formData = new FormData();
+                    formData.append("path", `course/${courseID}/lectures/${lectureName}`);
+                    formData.append("file", file.file);
 
-        const fileURLArray: { index: number; url: string; }[] = [];
-        file.forEach(async (file, index) => {
-            const formData = new FormData();
-            formData.append("path", `course/${courseID}/lectures/${lectureName}`);
-            formData.append("file", file);
+                    const fileRes = await fetch(`${route}/api/v1/file/upload`, {
+                        method: "POST",
+                        body: formData
+                    });
 
-            const fileRes = await fetch(`${route}/api/v1/file/upload`, {
-                method: "POST",
-                body: formData
-            });
+                    const fileURL = await fileRes.json().then((res) => res.data);
 
-            const fileURL = await fileRes.json().then((res) => {
-                return res.data;
-            });
+                    console.log({ index: index, url: fileURL, text: file.text });
 
-            fileURLArray.push({ index: index, url: fileURL });
-        });
-        
-        
+                    return { index: index, url: fileURL, text: file.text };
+                })
+            );
+
+            return fileURLArray;
+        };
+
+        const fileURLArray = await uploadFilesAndGetUrls(textPair, courseID, lectureName);
+        console.log(fileURLArray)
+
+
         const res = await fetch(`${route}/api/v1/lecture/create`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
@@ -49,38 +46,95 @@ export default class CreateLectureAndGenerateChaptersUseCase {
             }),
         })
         const data: ApiResponse = await res.json();
-        return data;
-    }
+        if (!data.success) return data;
 
+        console.log(data)
 
-    async generateChapters(
-        imagesArray: string[]
-    ): Promise<ApiResponse> {
+        const processFileURLs = async (fileURLArray: { index: number, url: string, text: string }[]) => {
+            const headlines: any = await Promise.all(
+                fileURLArray.map(async (pair) => {
+                    console.log(pair);
+                    const text = pair.text;
+                    const pdfRes = await fetch(`${route}/api/v1/gpt/processpdf`, {
+                        method: "POST",
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text }),
+                    });
 
-        const headlines: string[] = []
+                    const pdfJson = await pdfRes.json();
+                    if (!pdfRes.ok || !pdfJson.success) return pdfJson;
 
-        imagesArray.forEach(async (image, index) => {
-            const pdfRes = await fetch(`${route}/api/v1/gpt/processpdf`, {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    image
-                }),
-            })
-    
-            const pdfJson = await pdfRes.json()
-            const chapterData = JSON.parse(pdfJson.data);
-            const headline = chapterData.map((chapter: {headline: string, contents: string}) => chapter.headline);
-            headlines.push(headline);
-        })
+                    console.log(pdfJson.data)
+                    const chapterData = JSON.parse(pdfJson.data);
+                    console.log(chapterData)
+                    const headline = chapterData.headline;
+                    return headline;
+                })
+            );
 
-        const res = await fetch(`${route}/api/v1/gpt/generatechapter`, {
+            return headlines;
+        };
+
+        const headlines = await processFileURLs(fileURLArray);
+        console.log(headlines);
+
+        const res2 = await fetch(`${route}/api/v1/gpt/generatechapter`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 headlines
             }),
         })
-        return res.json()
+        const data2 = await res2.json();
+        if (!data2.success) return data2;
+        const chapters = JSON.parse(data2.data)
+
+        chapters.forEach(async (chapterName: string, index: number) => {
+            const createChapRes = await fetch(`${route}/api/v1/chapter/create`, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    courseID,
+                    lectureID,
+                    chapterName
+                }),
+            })
+            const createChapData = await createChapRes.json();
+            if (!createChapData.success) return createChapData;
+        })
+
+        
     }
+
+
+    // async generateChapters(
+    //     fileURLArray: string[]
+    // ): Promise<ApiResponse> {
+
+    //     const headlines: string[] = []
+
+    //     fileURLArray.forEach(async (image, index) => {
+    //         const pdfRes = await fetch(`${route}/api/v1/gpt/processpdf`, {
+    //             method: "POST",
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({
+    //                 image
+    //             }),
+    //         })
+
+    //         const pdfJson = await pdfRes.json()
+    //         const chapterData = JSON.parse(pdfJson.data);
+    //         const headline = chapterData.map((chapter: { headline: string, contents: string }) => chapter.headline);
+    //         headlines.push(headline);
+    //     })
+
+    //     const res = await fetch(`${route}/api/v1/gpt/generatechapter`, {
+    //         method: "POST",
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({
+    //             headlines
+    //         }),
+    //     })
+    //     return res.json()
+    // }
 }

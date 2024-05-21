@@ -27,6 +27,7 @@ export default class ReadEntireTreeUseCase {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    courseID,
                     lectureID
                 }),
             })
@@ -36,30 +37,32 @@ export default class ReadEntireTreeUseCase {
 
             chap.data.forEach(async (chapter: any, index: number) => {
                 const chapterID = chapter.chapterID
-                const nodeRes = await fetch(`${route}/api/v1/node/one/multiple/read`, {
+                const nodeRes = await fetch(`${route}/api/v1/node/one/read/multiple`, {
                     method: "POST",
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
+                        courseID,
+                        lectureID,
                         chapterID
                     }),
                 })
                 const node: ApiResponse = await nodeRes.json();
                 if (!node.success) return (node)
-                treeData[index].chapters[index].nodeOne = node.data
+                if(treeData[index]) treeData[index].chapters[index].node = node.data
 
-                node.data.forEach(async (node: any, index: number) => {
-                    const nodeOneID = node.nodeOneID
-                    const nodeTwoRes = await fetch(`${route}/api/v1/node/two/multiple/read`, {
-                        method: "POST",
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            nodeOneID
-                        }),
-                    })
-                    const nodeTwo: ApiResponse = await nodeTwoRes.json();
-                    if (!nodeTwo.success) return (nodeTwo)
-                    treeData[index].chapters[index].nodeOne[index].nodeTwo = nodeTwo.data
-                })
+                // node.data.forEach(async (node: any, index: number) => {
+                //     const nodeOneID = node.nodeOneID
+                //     const nodeTwoRes = await fetch(`${route}/api/v1/node/two/multiple/read`, {
+                //         method: "POST",
+                //         headers: { 'Content-Type': 'application/json' },
+                //         body: JSON.stringify({
+                //             nodeOneID
+                //         }),
+                //     })
+                //     const nodeTwo: ApiResponse = await nodeTwoRes.json();
+                //     if (!nodeTwo.success) return (nodeTwo)
+                //     treeData[index].chapters[index].nodeOne[index].nodeTwo = nodeTwo.data
+                // })
             })
         })
 

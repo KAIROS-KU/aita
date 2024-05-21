@@ -3,9 +3,9 @@ import route from "@/types/route";
 export default class CreateCourseUseCase {
     async create(
         courseName: string,
-        courseCode?: string,
-        profName?: string,
-        syllabusFile?: File,
+        courseCode: string,
+        profName: string,
+        syllabusFile: File,
     ): Promise<ApiResponse> {
         const file = syllabusFile;
         const storageRes = await fetch(`${route}/api/v1/file/upload`, {
@@ -15,10 +15,7 @@ export default class CreateCourseUseCase {
                 file,
             }),
         });
-        const storageResJson = await storageRes.json();
-        console.log(storageResJson)
-
-        if (!storageResJson.success) return storageResJson;
+        const storageResJson = await storageRes.json()
 
         const res = await fetch(`${route}/api/v1/course/create`, {
             method: "POST",
@@ -31,6 +28,7 @@ export default class CreateCourseUseCase {
             }),
         });
         const data = await res.json();
+        console.log(data)
         return data;
     }
 }

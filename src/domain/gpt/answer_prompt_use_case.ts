@@ -23,6 +23,7 @@ export default class AnswerPromptUseCase {
             }),
         })
         const response = await res.json()
+        console.log(response)
         const data = JSON.parse(response.data)
         return {
             success: response.success,

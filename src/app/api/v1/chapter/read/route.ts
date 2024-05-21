@@ -10,17 +10,20 @@ export async function POST(request:Request) {
     
     const chapterCollection = getChapterCollection(courseID, lectureID);
     const querySnapshot = await getDocs(chapterCollection);
+    const chapterArray: any = [];
 
-    const documents = querySnapshot.docs.map(doc => ({
-      chapterID: doc.data().chapterID, 
-      chapterName: doc.data().chapterName
-    }));
-    
+    querySnapshot.forEach(doc => {
+      chapterArray.push({
+        chapterID: doc.id,
+        chapterName: doc.data().chapterName
+      });
+    })
+
     return new Response(
       JSON.stringify({
         success: true,
         message: "CHAPTER 불러오기에 성공했습니다",
-        data: documents
+        data: chapterArray
       })
     );
   } catch (error) {

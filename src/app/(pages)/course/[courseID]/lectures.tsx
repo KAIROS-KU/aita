@@ -5,7 +5,7 @@ import { Timestamp } from "firebase/firestore";
 import Button from "./button";
 import GlobalButton from "@/lib/components/global_button";
 import Modal from "@/lib/components/modal";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import GlobalComponents from "@/lib/components/global_components";
 
 function LectureItem({
@@ -51,15 +51,30 @@ function AddLectureModal({
 }) {
     const [lectureName, setLectureName] = useState("")
     const [file, setFile] = useState<File>({} as File)
+    // const [pdfFile, setPdfFile] = useState(null);
 
-
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
+    const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
         if (files && files.length > 0) {
-            const selectedFile = files[0];
-            setFile(selectedFile);
+            const file = files[0];
+            setFile(file);
         }
-    };
+    }
+
+    // const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    //     const files = event.target.files;
+    //     if (files && files.length > 0) {
+    //         const file = files[0];
+    //         const reader = new FileReader();
+
+    //         reader.onload = (e) => {
+    //             const base64String = e.target.result.split(',')[1];
+    //             setPdfFile(base64String);
+    //         };
+
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
 
     return (
         <Modal open={open} onClose={onClose}>
@@ -78,9 +93,9 @@ function AddLectureModal({
     );
 }
 
-function PDFViewer({ fileURL }: { fileURL: string }) {
+function PDFViewer({ fileURL, onMouseEnter, onMouseLeave }: { fileURL: string, onMouseEnter?: (e?: any) => void, onMouseLeave?: (e?: any) => void}) {
     return (
-        <embed src={fileURL} className="w-full h-full" />
+        <embed src={fileURL} className="w-full h-full" onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}/>
     );
 };
 

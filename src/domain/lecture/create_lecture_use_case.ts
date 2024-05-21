@@ -18,6 +18,8 @@ export default class CreateLectureUseCase {
         const fileURL = await fileRes.json().then((res) => {
             return res.data
         })
+
+        if (!fileURL) return { success: false, message: "파일 업로드에 실패했습니다", data: fileURL }
         
         const res = await fetch(`${route}/api/v1/lecture/create`, {
             method: "POST",
