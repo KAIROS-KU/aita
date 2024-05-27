@@ -26,7 +26,6 @@ export default function LogInPage() {
         setLoading(true)
         const use_case = new SignInUseCase()
         const res = await use_case.signIn(signInData.email, signInData.password)
-        console.log(res)
         if (res.success) router.push("/course")
         else if (res.data.includes("invalid-credential")) setModal({
             open: true,

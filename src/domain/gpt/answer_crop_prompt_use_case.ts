@@ -3,7 +3,8 @@ import route from "@/types/route"
 export default class AnswerCropPromptUseCase {
     async generate(
         prompt: string,
-        cropImage: File
+        cropImage: File,
+        headlineContents: string
     ){
         const formData = new FormData();
         formData.append("path", `crop/${prompt}`);
@@ -23,7 +24,8 @@ export default class AnswerCropPromptUseCase {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 prompt,
-                fileURL
+                fileURL,
+                headlineContents
             }),
         })
         return res.json()

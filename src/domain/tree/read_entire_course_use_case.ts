@@ -1,6 +1,6 @@
 // all lecture - all chapter - all node까지 가져오는 유즈케이스
 
-import { LectureProps } from "@/app/sample_data";
+import { LectureProps } from "@/types/route";
 import route from "@/types/route";
 
 export default class ReadEntireTreeUseCase {

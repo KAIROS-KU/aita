@@ -1,6 +1,6 @@
 "use client"
 
-import { CourseProps } from "@/app/sample_data"
+import { CourseProps } from "@/types/route"
 import Button from "./button"
 import Icon from "./icons"
 import Image from "next/image"

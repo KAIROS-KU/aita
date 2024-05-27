@@ -3,11 +3,9 @@
 import Container from "@/lib/components/container"
 import { useParams, useRouter } from "next/navigation"
 import Components from "./components"
-import { CourseProps, LectureProps } from "@/app/sample_data"
 import ReadLectureUseCase from "../../../../../../domain/lecture/read_lecture_use_case"
 import { useEffect, useState } from "react"
 import ReadCourseUseCase from "../../../../../../domain/course/read_course_use_case"
-import Lectures from "../../lectures"
 import Loader from "@/lib/components/loader"
 import AnswerPromptUseCase from "../../../../../../domain/gpt/answer_prompt_use_case"
 import { ScreenCapture } from 'react-screen-capture';
@@ -16,7 +14,7 @@ import CreateNodeOneUseCase from "../../../../../../domain/node_one/create_node_
 import ReadChapterUseCase from "../../../../../../domain/chapter/read_chapter_use_case"
 import Modal from "@/lib/components/modal"
 import GlobalButton from "@/lib/components/global_button"
-import GlobalComponents from "@/lib/components/global_components"
+import { CourseProps, LectureProps } from "@/types/route"
 
 
 export default function LectureItem() {
@@ -59,22 +57,9 @@ export default function LectureItem() {
     const getPromptResponse = async (prompt: string) => {
         setScreenCapture("")
         setLoading(true)
-        const use_case = new AnswerPromptUseCase()
-        const bgInfo = `
-            ### BACKGROUND INFORMATION:
-            An agent is anything that can be viewed as perceiving its environment through sensors and acting upon that environment through actuators.
-            A human agent has eyes, ears, and other organs for sensors and hands, legs, vocal tract, and so on for actuators.
-            A robotic agent might have cameras and infrared range finders for sensors and various motors for actuators.
-            A software agent receives file contents, network packets, and human input (keyboard/mouse/touchscreen/voice)
-            as sensory inputs and acts on the environment by writing files, sending network packets, and displaying information or generating sounds.
-            The environment could be everything—the entire universe! In practice it is just that part of the universe
-            whose state we care about when designing this agent—the part that affects what the agent perceives and that is affected by the agents actions.
+        const answer_prompt_use_case = new AnswerPromptUseCase()
+        const response = await answer_prompt_use_case.generate(prompt, lecture.headlineContents)
 
-            ### PROMPT:
-            Given this info, help me answer: ${prompt}.
-            ONLY use the information provided above. Do not add any additional information.
-        `
-        const response = await use_case.generate(bgInfo)
         const data = response.data.map((node: any) => {
             return {
                 index: node.index,
@@ -148,8 +133,9 @@ export default function LectureItem() {
 
     const [screenCapture, setScreenCapture] = useState("")
 
-    const handleScreenCapture = (sc: string) => {
-        setScreenCapture("captured");
+    const handleScreenCapture = (sc: any) => {
+        console.log(sc);
+        setScreenCapture(sc);
     };
 
     return (
@@ -172,11 +158,9 @@ export default function LectureItem() {
                             <div className="w-full flex-grow bg-neutral-200 relative" style={{
                                 borderRadius: 20
                             }}>
-                                {lecture.fileURL &&
-                                    <Lectures.PDFViewer
-                                        fileURL={lecture.fileURL}
-                                    />
-                                }
+                                {lecture.fileURL && <embed src={lecture.fileURL} className="w-full h-full" />}
+                                {lecture.fileURL && <iframe src={lecture.fileURL} className="w-full h-full" />}
+
                             </div>
                             <div className="absolute hover:bg-neutral-500 bg-neutral-300" style={{
                                 bottom: 20,
@@ -216,7 +200,7 @@ export default function LectureItem() {
                                 {screenCapture &&
                                     <div className="absolute" style={{ top: -100 }}>
                                         <Image
-                                            src="https://firebasestorage.googleapis.com/v0/b/ai-ta-206f2.appspot.com/o/%E1%84%80%E1%85%A1%E1%86%BC%E1%84%8B%E1%85%B4%E1%84%89%E1%85%A2%E1%86%B7%E1%84%91%E1%85%B3%E1%86%AF.png?alt=media&token=ff81be0f-22c1-4683-af05-75541ec996d6"
+                                            src={screenCapture}
                                             alt="Screen Capture"
                                             width={200}
                                             height={200}

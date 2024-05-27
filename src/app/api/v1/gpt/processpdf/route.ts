@@ -5,7 +5,7 @@ export async function POST(request: Request) {
         const { text } = await request.json() as { text: string };
 
         const openai = new OpenAI({
-            apiKey: "sk-proj-jDLH4QsIeM0qVBcceiB1T3BlbkFJpEAMIdhkp4GOn2et2DoW",
+            apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
         });
 
         const completion = await openai.chat.completions.create({
@@ -13,13 +13,10 @@ export async function POST(request: Request) {
                 {
                     role: "assistant",
                     content: `
-                        Please explain the content of this lecture material as "headline - contents".
-                        If there are several headline - contents, sum them into one headlines like A&B-a&b.
-                        Please write in this format only: {"headline":"~", "contents":"~"}
+                        Your goal is to summarize the content of the lecture material in a headline - contents format.
+                        Explain the content of this lecture material as an array of {"headline":"~", "contents":"~"}.
+                        Write in this format only: [{"headline":"~", "contents":"~"}, {"headline":"~", "contents":"~"}, ...]
                         RETURN RESPONSE IN JSON FORMAT WITHOUT ANY OTHER CHARACTERS.
-                        RETURN RESPONSE IN JSON FORMAT WITHOUT ANY OTHER CHARACTERS.
-                        RETURN RESPONSE IN JSON FORMAT WITHOUT ANY OTHER CHARACTERS.
-
                         The lecture material is as follows: ${text}
                     `,
                 },

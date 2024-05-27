@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from 'react';
 import ReactFlow, { Controls } from 'reactflow';
 import NodeTypes from './node';
 import 'reactflow/dist/style.css';
-import { ChapterProps, LectureProps, NodeProps } from '@/app/sample_data';
+import { ChapterProps, LectureProps, NodeProps } from '@/types/route';
 import ReadEntireTreeUseCase from '../../../../../../../domain/tree/read_entire_course_use_case';
 import ReadLectureUseCase from '../../../../../../../domain/lecture/read_lecture_use_case';
 import ReadChapterUseCase from '../../../../../../../domain/chapter/read_chapter_use_case';
@@ -29,10 +29,13 @@ async function NodeConverter(lectures: LectureProps[], courseID: string) {
 
   const chap_res = await read_chapter.read(courseID, lectureID)
   const chap_data = chap_res.data
-  chapterList.push(chap_data)
+  chapterList.concat(chap_data)
+
+  console.log(chapterList)
 
   chap_data.forEach(async (chapter: ChapterProps) => {
     const node_res = await read_node.read(courseID, lectureID, chapter.chapterID)
+    console.log(node_res)
     const node_data = node_res.data
     nodeList.push(node_data)
   });
@@ -131,7 +134,6 @@ async function NodeConverter(lectures: LectureProps[], courseID: string) {
   //   );
   // }
   // );
-
   return { initialNodes, initialEdges };
 }
 
@@ -155,7 +157,6 @@ export default function Tree({ courseID }: { courseID: string }) {
     readTree();
   }, [courseID]);
 
-  console.log(nodes, edges);
 
   return (
     <ReactFlow

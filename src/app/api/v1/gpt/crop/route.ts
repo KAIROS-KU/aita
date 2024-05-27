@@ -2,17 +2,22 @@ import OpenAI from "openai";
 
 export async function POST(request: Request): Promise<Response> {
     try {
-        const { prompt, fileURL } = await request.json() as {
+        const {
+            prompt,
+            fileURL,
+            headlineContents
+        } = await request.json() as {
             prompt: string,
-            fileURL: string
+            fileURL: string,
+            headlineContents: string
         };
 
         const openai = new OpenAI({
-            
+
         });
 
         const completion = await openai.chat.completions.create({
-            model: "gpt-4o-2024-05-13",
+            model: "gpt-4o",
             messages: [
                 {
                     "role": "user",
@@ -20,11 +25,11 @@ export async function POST(request: Request): Promise<Response> {
                         {
                             "type": "text",
                             "text": `
-                                Please answer the user's prompt using the detail of this lecture material.
-                                Return your answer as a "title - detail" pair.
-                                Only the escape character \\" is allowed.
+                                Answer the user's prompt using the headline-contents pair of the lecture's material and an image that the user wants to focus on.
                                 Please write in this format only: [{"title":"", "detail":""}, {"title":"", "detail":""}, ...]
+                                Return the response in JSON format without any other characters.
                                 The user's prompt is: ${prompt}
+                                The headline-contents of the lecture material is as follows: ${headlineContents}
                                 `
                         },
                         {

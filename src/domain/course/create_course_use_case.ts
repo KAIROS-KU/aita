@@ -28,7 +28,6 @@ export default class CreateCourseUseCase {
             }),
         });
         const data = await res.json();
-        console.log(data)
         return data;
     }
 }

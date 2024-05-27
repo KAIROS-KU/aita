@@ -41,14 +41,22 @@ function CourseName({
 
 function InputField({
     onChange,
-    placeholder
+    placeholder,
+    onEnter
 }: {
     onChange: (e: string) => void,
-    placeholder: string
+    placeholder: string,
+    onEnter?: () => void
 }) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         onChange(value);
+    }
+    const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            e.currentTarget.blur();
+            onEnter && onEnter();
+        }
     }
     return (
         <input
@@ -56,21 +64,30 @@ function InputField({
             className="w-full h-12 px-5 py-3 bg-neutral-white border border-neutral-200 rounded-md px-4 text-body-r-16 rounded-xl placeholder-neutral-300"
             placeholder={placeholder}
             style={{ outline: "none" }}
+            onKeyPress={handleEnter}
         />
     )
 }
 
 function Password({
     onChange,
-    placeholder
+    placeholder,
+    onEnter
 }: {
     onChange: (e: string) => void,
-    placeholder: string
+    placeholder: string,
+    onEnter?: () => void
 }) {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         onChange(value);
+    }
+    const handleEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            e.currentTarget.blur();
+            onEnter && onEnter();
+        }
     }
     return (
         <input
@@ -79,6 +96,7 @@ function Password({
             placeholder={placeholder}
             style={{ outline: "none" }}
             type="password"
+            onKeyPress={handleEnter}
         />
     )
 }

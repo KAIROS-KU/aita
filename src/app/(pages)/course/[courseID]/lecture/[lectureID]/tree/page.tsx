@@ -1,7 +1,7 @@
 "use client"
 
 import Container from "@/lib/components/container";
-import { CourseProps } from "@/app/sample_data";
+import { CourseProps } from "@/types/route";
 import GlobalComponents from "@/lib/components/global_components";
 import Tree from "./components";
 import { useEffect, useState } from "react";

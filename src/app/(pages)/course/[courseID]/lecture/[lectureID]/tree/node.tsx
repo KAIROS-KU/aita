@@ -1,4 +1,4 @@
-import { ChapterProps, LectureProps, NodeProps } from "@/app/sample_data";
+import { ChapterProps, LectureProps, NodeProps } from "@/types/route";
 import GlobalComponents from "@/lib/components/global_components";
 
 function LectureItem({

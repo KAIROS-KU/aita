@@ -43,10 +43,12 @@ function LogInContainer({
                         <GlobalComponents.InputField
                             onChange={(e) => setInput({ ...input, email: e })}
                             placeholder="이메일"
+                            onEnter={() => onClick(input)}
                         />
                         <GlobalComponents.Password
                             onChange={(e) => setInput({ ...input, password: e })}
                             placeholder="비밀번호"
+                            onEnter={() => onClick(input)}
                         />
                     </div>
                     <GlobalButton.MainButton

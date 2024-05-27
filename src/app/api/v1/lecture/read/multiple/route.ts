@@ -1,4 +1,4 @@
-import { LectureProps } from "@/app/sample_data";
+import { LectureProps } from "@/types/route";
 import { getLectureCollection } from "@/firebase";
 import { getDocs } from "firebase/firestore";
 

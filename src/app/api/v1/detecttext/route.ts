@@ -5,21 +5,24 @@ export async function POST(request: Request) {
         const firebaseFunctionUrl = 'https://asia-northeast3-kairos-3326d.cloudfunctions.net/detectText';
 
         const fileType = 'pdf'
-        const body = { fileType, image: file };
 
         const response = await fetch(firebaseFunctionUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify({
+                fileType,
+                image: file
+            })
         });
+        return response
 
         return new Response(
             JSON.stringify({
                 success: true,
                 message: '텍스트 추출에 성공했습니다',
-                data: await response.json(),
+                data: response,
             }),
         )
     } catch (error) {

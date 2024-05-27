@@ -1,16 +1,15 @@
 "use client"
 
 import Container from "@/lib/components/container";
-import Lectures from "./lectures";
+import Components from "./components";
 import GlobalButton from "@/lib/components/global_button";
-import { CourseProps, LectureProps } from "@/app/sample_data";
+import { CourseProps, LectureProps } from "@/types/route";
 import GlobalComponents from "@/lib/components/global_components";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ReadCourseUseCase from "../../../../domain/course/read_course_use_case";
 import ReadLectureUseCase from "../../../../domain/lecture/read_lecture_use_case";
 import Loader from "@/lib/components/loader";
-import CreateChapterUseCase from "../../../../domain/chapter/create_chapter_use_case";
 import CreateLectureUseCase from "../../../../domain/lecture/create_lecture_use_case";
 
 export default function Home() {
@@ -45,75 +44,21 @@ export default function Home() {
     getCourse()
   }, [])
 
-  const base64ToBlob = (base64: string, contentType: string) => {
-    const byteCharacters = atob(base64);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    return new Blob([byteArray], { type: contentType });
-  };
-
 
   const addLecture = async (lectureName: string, file: File) => {
-    if (!lectureName || !file) return alert("모든 항목을 입력해주세요.")
+    try {
+      if (!lectureName || !file) return alert("모든 항목을 입력해주세요.")
+      setLoading(true)
+      const create_lecture_use_case = new CreateLectureUseCase();
+      await create_lecture_use_case.create(courseID, lectureName, file);
+      getCourse();
+    } catch (error) {
+      alert("네트워크 오류가 발생했습니다. 관리자에게 문의주세요.")
+    } finally {
+      setLoading(false)
+      setOpen(false)
+    }
 
-    setLoading(true)
-
-    const create_lecture_use_case = new CreateLectureUseCase();
-    const lecRes = await create_lecture_use_case.create(courseID, lectureName, file);
-    if (!lecRes.success) return alert(lecRes.message)
-    const lectureID = lecRes.data.lectureID;
-
-    const create_chapter_use_case = new CreateChapterUseCase();
-    const sampleChapters = [
-      "Intelligent Agents",
-      "Solving Problems by Searching",
-      "Adversarial Search",
-      "Constraint Satisfaction Problems",
-      "Logical Agents",
-      "Knowledge and Reasoning"
-    ]
-    sampleChapters.forEach(async (chapterName) => {
-      await create_chapter_use_case.createSampleChapter(courseID, lectureID, chapterName);
-    })
-
-    getCourse();
-    setLoading(false)
-    setOpen(false)
-
-    // const response1 = await fetch(`${route}/api/v1/gpt/dividepdf`, {
-    //   method: "POST",
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     file
-    //   }),
-    // })
-    // const response2 = await response1.json()
-    // if (!response2.success) return alert(response2.message)
-    // const data = response2.data
-    // const files = data.pages.map((base64String: string, index: number) => {
-    //   const blob = base64ToBlob(base64String, 'application/pdf');
-    //   return new File([blob], `page-${index + 1}.pdf`, { type: 'application/pdf' });
-    // });
-
-    // const textPair: { file: File, text: string }[] = []
-    // const service = new ConvertFileToTextService()
-    // for (const file of files) {
-    //   const response = await service.convert(file)
-    //   const responseJson = await response.json()
-    //   if (!responseJson.success) return alert(responseJson.message)
-    //   const newPair = { file: file, text: responseJson.data.text }
-    //   textPair.push(newPair)
-    // }
-
-    // const use_case = new CreateLectureAndGenerateChaptersUseCase();
-    // const res = await use_case.createLecture(courseID, lectureName, lectureID, textPair);
-    // if (res.success) {
-    //   getCourse();
-    //   setOpen(false);
-    // }
   }
   return (
     <Container.MainContainer>
@@ -132,7 +77,7 @@ export default function Home() {
         </div>
         <div className="flex flex-col gap-3" style={{ overflowY: "scroll", maxHeight: 650 }}>
           {lecture?.map((lecture: LectureProps, index: number) => (
-            <Lectures.LectureItem
+            <Components.LectureItem
               key={index}
               lectureName={lecture.lectureName}
               createdAt={lecture.createdAt}
@@ -142,7 +87,7 @@ export default function Home() {
           ))}
         </div>
       </div>
-      <Lectures.AddLectureModal open={open} onClose={() => setOpen(false)} onClick={(e, file) => addLecture(e, file)} />
+      <Components.AddLectureModal open={open} onClose={() => setOpen(false)} onClick={(e, file) => addLecture(e, file)} />
       {loading && <Loader />}
     </Container.MainContainer>
   );

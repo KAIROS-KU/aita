@@ -5,7 +5,7 @@ export async function POST(request: Request) {
         const { headlines } = await request.json() as { headlines: string[] };
 
         const openai = new OpenAI({
-            apiKey: "sk-proj-jDLH4QsIeM0qVBcceiB1T3BlbkFJpEAMIdhkp4GOn2et2DoW",
+            apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
         });
 
         const completion = await openai.chat.completions.create({

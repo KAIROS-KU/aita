@@ -1,5 +1,3 @@
-import { Timestamp } from "firebase/firestore";
-
 const formatDate = (fbDate: any) => {
     if (fbDate) {
         const milliseconds = fbDate.seconds * 1000 + fbDate.nanoseconds / 1000000;
