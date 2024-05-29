@@ -25,7 +25,7 @@ export default class CreateLectureUseCase {
         file: File
     ): Promise<ApiResponse> {
         // 자료 분석
-        const base64 = await this.fileToBase64(file);        
+        const base64 = await this.fileToBase64(file);
         const fileType = file.type.includes('pdf') ? 'pdf' : 'image';
         const body = fileType === 'pdf' ? { fileType, pdf: base64 } : { fileType, image: base64 };
         const extractTextRes = await fetch(this.firebaseFunctionUrl, {
@@ -77,7 +77,40 @@ export default class CreateLectureUseCase {
             }),
         })
         const result = await res.json()
+        if (!result.success) return { success: false, message: "강의자료 업로드에 실패했습니다.", data: null }
+        const lectureID = result.data.lectureID
+        const headlines: string[] = headlineContents.map((headlineContent: any) => headlineContent.headline)
 
-        return result;
+        // 챕터 생성
+        const chapterRes = await fetch(`${route}/api/v1/gpt/generatechapter`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                headlines
+            }),
+        })
+        const chapterResult = await chapterRes.json()
+        if (!chapterResult.success) return { success: false, message: "목차 생성에 실패했습니다", data: null }
+        const chapters = JSON.parse(chapterResult.data)
+
+        // 챕터 업로드
+        chapters.forEach(async (chapter: any) => {
+            const chapterName = chapter.chapterName
+            const contents = chapter.headlines
+            const createChapterRes = await fetch(`${route}/api/v1/chapter/create`, {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    courseID,
+                    lectureID,
+                    chapterName,
+                    contents
+                }),
+            })
+            const result = await createChapterRes.json()
+            if (!result.success) return { success: false, message: "챕터 생성에 실패했습니다", data: null }
+        })
+
+        return { success: true, message: "강의자료 업로드에 성공했습니다", data: lectureID };
     }
 }

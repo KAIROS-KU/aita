@@ -109,7 +109,8 @@ function ToLearn({
 const Components = {
     LectureItem,
     AddLectureModal,
-    PDFViewer
+    PDFViewer,
+    ToLearn
 }
 
 export default Components;

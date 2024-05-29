@@ -26,15 +26,30 @@ type ChapterProps = {
     chapterID: string;
     chapterName: string;
     createdAt: Date;
-    nodes?: NodeProps[];
+    nodes?: NodeOneProps[];
 }
 
-type NodeProps = {
+type NodeOneProps = {
+    nodeID: string;
+    title: string;
+    createdAt: Date;
+    detail: string;
+    nodes?: NodeTwoProps[];
+}
+
+type NodeTwoProps = {
     nodeID: string;
     title: string;
     createdAt: Date;
     detail: string;
 }
 
-export type { CourseProps, LectureProps, ChapterProps, NodeProps };
+type UnorganizedNodeProps = {
+    nodeID: string;
+    title: string;
+    createdAt: Date;
+    detail: string;
+}
+
+export type { CourseProps, LectureProps, ChapterProps, NodeOneProps, NodeTwoProps, UnorganizedNodeProps };
 export default route;

@@ -10,11 +10,11 @@ import Loader from "@/lib/components/loader"
 import AnswerPromptUseCase from "../../../../../../domain/gpt/answer_prompt_use_case"
 import { ScreenCapture } from 'react-screen-capture';
 import Image from "next/image"
-import CreateNodeOneUseCase from "../../../../../../domain/node_one/create_node_one_use_case"
 import ReadChapterUseCase from "../../../../../../domain/chapter/read_chapter_use_case"
 import Modal from "@/lib/components/modal"
 import GlobalButton from "@/lib/components/global_button"
-import { CourseProps, LectureProps } from "@/types/route"
+import { CourseProps, LectureProps, UnorganizedNodeProps } from "@/types/route"
+import OrganizeNodeUseCase from "../../../../../../domain/node/organize_node_use_case"
 
 
 export default function LectureItem() {
@@ -59,7 +59,7 @@ export default function LectureItem() {
         setLoading(true)
         const answer_prompt_use_case = new AnswerPromptUseCase()
         const response = await answer_prompt_use_case.generate(prompt, lecture.headlineContents)
-
+        console.log(response)
         const data = response.data.map((node: any) => {
             return {
                 index: node.index,
@@ -105,23 +105,32 @@ export default function LectureItem() {
     }
 
 
+    console.log(qna)
     const createNode = async () => {
         setLoading(true)
         const read_chapter_use_case = new ReadChapterUseCase();
         const res = await read_chapter_use_case.read(courseID, lectureID);
         const chapters = res.data
-        const sampleChap = chapters[0].chapterID
 
-        const create_node_one_use_case = new CreateNodeOneUseCase();
-        nodes.forEach(async (title: string) => {
-            await create_node_one_use_case.create(
-                courseID,
-                lectureID,
-                sampleChap,
-                title,
-                "detail"
-            );
-        })
+        // const create_node_one_use_case = new CreateNodeOneUseCase();
+        // nodes.forEach(async (title: string) => {
+        //     await create_node_one_use_case.create(
+        //         courseID,
+        //         lectureID,
+        //         sampleChap,
+        //         title,
+        //         "detail"
+        //     );
+        // })
+
+        const organize_node_use_case = new OrganizeNodeUseCase();
+        const response = await organize_node_use_case.organize(
+            chapters,
+            nodes,
+            courseID,
+            lectureID
+        )
+        console.log(response)
 
         setQna([])
         setNodes([])

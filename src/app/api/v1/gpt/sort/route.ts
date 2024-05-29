@@ -1,8 +1,9 @@
+import { ChapterProps } from "@/types/route";
 import OpenAI from "openai";
 
 export async function POST(request: Request): Promise<Response> {
     try {
-        const { prompt, chapterNames } = await request.json() as { prompt: string, chapterNames: string[] };
+        const { prompt, chapterList } = await request.json() as { prompt: string, chapterList: ChapterProps[] };
 
         const openai = new OpenAI({
             
@@ -15,7 +16,7 @@ export async function POST(request: Request): Promise<Response> {
             Please classify the user's inquiry into one of the following chapters.
             Do not say anything other than the page number(1, 2, 3, 4, 5, ...). Just print the page number.
             
-            Chapter list: ${chapterNames.map(name => `"${name}"`).join(", ")}
+            Chapters: ${JSON.stringify(chapterList)}
 
             Response format:
             1

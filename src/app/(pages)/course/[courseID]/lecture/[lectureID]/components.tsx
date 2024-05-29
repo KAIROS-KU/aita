@@ -121,12 +121,12 @@ function QnA({
     return (
         <div className="flex flex-col">
             <div className="flex gap-5 items-center" style={{ padding: "10px 0" }}>
-                <div className="text-neutral-700 bg-neutral-300 text-h2-sb-24 flex justify-center items-center w-11 h-11 rounded-full">Q</div>
+                <div className="text-neutral-700 bg-neutral-300 text-h2-sb-24 flex justify-center items-center w-11 h-11 rounded-full flex-shrink-0">Q</div>
                 <div className="text-body-m-16">{question}</div>
             </div>
             <div className="flex flex-col justify-end">
                 <div className="flex gap-5 items-start justify-start" style={{ padding: "10px 0" }}>
-                    <div className="text-neutral-700 bg-neutral-300 text-h2-sb-24 flex justify-center items-center w-11 h-11 rounded-full">A</div>
+                    <div className="text-neutral-700 bg-neutral-300 text-h2-sb-24 flex justify-center items-center w-11 h-11 rounded-full flex-shrink-0">A</div>
                     <div className="flex flex-col gap-3 w-full">
                         {answerData?.map((data, index) => (
                             <GlobalComponents.Toggle key={index} title={data.title} contents={data.detail} pinStatus={data.pin} pinClick={() => handlePin(data, index)} />
@@ -160,7 +160,7 @@ function PromptInput({
         }
     }
     return (
-        <div className="border-2 border-neutral-300 p-5 flex gap-3" style={{ borderRadius: 20 }}>
+        <div className="border-2 border-neutral-300 p-2 flex gap-3" style={{ borderRadius: 20 }}>
             <input
                 className="flex-grow outline-none"
                 onChange={handleChange}

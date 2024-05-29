@@ -6,7 +6,7 @@ export default class ReadNodeOneUseCase {
         lectureID: string,
         chapterID: string,
     ): Promise<ApiResponse> {
-        const res = await fetch(`${route}/api/v1/node/read`, {
+        const res = await fetch(`${route}/api/v1/node/one/read/multiple`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

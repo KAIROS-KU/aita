@@ -2,7 +2,7 @@
 
 import formatDate from "@/lib/utils/format_date";
 import { Timestamp } from "firebase/firestore";
-import Button from "./[courseID]/button";
+import Button from "./[courseID]/components";
 import GlobalButton from "@/lib/components/global_button";
 
 function LectureItem({

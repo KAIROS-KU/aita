@@ -35,7 +35,7 @@ function ChapterItem({
         <div className="flex items-center">
             <Circle dir="left" />
             <div className="bg-main-red flex items-center justify-center" style={{ padding: "6px 20px", borderRadius: 20 }}>
-                <div className="text-white text-h2-sb-12">{data.chapterName}</div>
+                <div className="text-neutral-white text-h2-sb-12">{data.chapterName}</div>
             </div>
             <Circle dir="right" />
         </div>

@@ -5,7 +5,6 @@ export default class ReadChapterUseCase {
         courseID: string,
         lectureID: string
     ): Promise<ApiResponse> {
-        console.log(courseID, lectureID)
         const res = await fetch(`${route}/api/v1/chapter/read`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
