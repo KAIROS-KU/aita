@@ -1,12 +1,10 @@
-import { LectureProps, ChapterProps, NodeProps } from "@/types/route";
+import { LectureProps, ChapterProps, UnorganizedNodeProps } from "@/types/route";
 
 export default function NodeConverter(
     lecture: LectureProps,
     chapterList: ChapterProps[],
-    nodeList: NodeProps[]
+    nodeList: UnorganizedNodeProps[]
 ) {
-    console.log(lecture, chapterList, nodeList)
-
     const initialNodes: any[] = [];
     const initialEdges: any[] = [];
 
@@ -16,23 +14,29 @@ export default function NodeConverter(
         data: {
             lectureName: lecture.lectureName,
         },
-        position: { x: 0, y: 0 },
+        position: { x: 0, y: 1200 },
+        sourcePosition: 'right',
+        targetPosition: 'left',
     });
 
     chapterList.forEach((chapter: ChapterProps, chap_id) => {
         initialNodes.push({
-            id: "chapter" + chap_id.toString(),
+            id: "chapter" + chapter.chapterID,
             type: 'ChapterItem',
             data: {
                 chapterName: chapter.chapterName,
             },
-            position: { x: 280, y: chap_id * 100 },
+            position: { x: 300, y: (chap_id + 2) * 300 },
+            sourcePosition: 'right',
+            targetPosition: 'left',
         });
 
         initialEdges.push({
-            id: "lecture" + "-chapter" + chap_id.toString(),
-            source: "lecture" + chap_id.toString(),
-            target: "chapter" + chap_id.toString(),
+            id: "lecture" + "-chapter" + chapter.chapterID,
+            source: "lecture",
+            target: "chapter" + chapter.chapterID,
+            animated: true,
+            sourceHandle: 'lecture',
         });
     })
 
@@ -44,13 +48,17 @@ export default function NodeConverter(
                 title: node.title,
                 detail: node.detail,
             },
-            position: { x: 500, y: node_id * 100 },
+            position: { x: 800, y: node_id * 150 },
+            sourcePosition: 'right',
+            targetPosition: 'left',
         });
 
         initialEdges.push({
-            id: "chapter" + node_id.toString() + "-node" + node_id.toString(),
-            source: "chapter" + node_id.toString(),
+            id: "chapter" + node.chapterID + "-node" + node_id.toString(),
+            source: "chapter" + node.chapterID,
             target: "node" + node_id.toString(),
+            animated: true,
+            style: { stroke: '#C7A7A7' },
         });
     })
 

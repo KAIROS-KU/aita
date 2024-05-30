@@ -3,19 +3,19 @@ import route, { ChapterProps, UnorganizedNodeProps } from "@/types/route"
 export default class OrganizeNodeUseCase {
     // 노드별로 위치 지정
     private async organizeNode(
-        chapterList: ChapterProps[],
-        nodeData: UnorganizedNodeProps[]
+        chapterList: any[],
+        nodeList: UnorganizedNodeProps[]
     ): Promise<ApiResponse> {
         const res = await fetch(`${route}/api/v1/gpt/organizetree`, {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 chapterList,
-                nodeData,
+                nodeList,
             }),
         })
         const response = await res.json()
-        // const data = JSON.parse(response.data)
+        console.log(response)
         return {
             success: response.success,
             message: response.message,
@@ -43,7 +43,6 @@ export default class OrganizeNodeUseCase {
             })
         })
         const response = await res.json()
-        console.log(response)
         return {
             success: response.success,
             message: response.message,
@@ -73,7 +72,6 @@ export default class OrganizeNodeUseCase {
             })
         })
         const response = await res.json()
-        console.log(response)
         return {
             success: response.success,
             message: response.message,
@@ -88,14 +86,60 @@ export default class OrganizeNodeUseCase {
         lectureID: string,
     ): Promise<ApiResponse> {
         try {
-            console.log(chapterList, nodeData, courseID, lectureID)
+            // 노드 분류
             const res = await this.organizeNode(chapterList, nodeData)
-            const data = JSON.parse(res.data)
-            
+            console.log(res)
+            const organizedNodeList = JSON.parse(res.data) as { chapterID: string, nodeID: string[] }[]
+            console.log(organizedNodeList)
+
+            // 노드1 업로드
+            for (const node of nodeData) {
+                const chapterID = organizedNodeList.find(organizedNode => organizedNode.nodeID.includes(node.title))?.chapterID
+                console.log(chapterID)
+                if (!chapterID) return {
+                    success: false,
+                    message: "노드1 업로드에 실패했습니다",
+                    data: {},
+                }
+                if (chapterID === "NO RELATION") continue
+                const res = await this.uploadNodeOne(courseID, lectureID, chapterID, node.title, node.detail)
+                console.log(res)
+                if (!res.success) return res
+                // remove node from organizedNodeList
+                organizedNodeList.filter(organizedNode => organizedNode.nodeID.includes(node.title))
+            }
+            console.log(organizedNodeList)
+
+            const remainingNodes = nodeData.filter(node => !organizedNodeList.some(organizedNode => organizedNode.nodeID.includes(node.title)))
+            console.log(remainingNodes)
+            // 노드2 업로드
+            const secondRes = await this.organizeNode(organizedNodeList, remainingNodes)
+            console.log(secondRes)
+            const organizedNodeList2 = JSON.parse(secondRes.data) as { chapterID: string, nodeID: string[] }[]
+            console.log(organizedNodeList2)
+            for (const node of remainingNodes) {
+                const chapterID = organizedNodeList2.find(organizedNode => organizedNode.nodeID.includes(node.title))?.chapterID
+                console.log(chapterID)
+                if (!chapterID) return {
+                    success: false,
+                    message: "노드2 업로드에 실패했습니다",
+                    data: {},
+                }
+                const nodeOneId = organizedNodeList.find(organizedNode => organizedNode.nodeID.includes(node.title))?.nodeID
+                if (!nodeOneId) return {
+                    success: false,
+                    message: "노드2 업로드에 실패했습니다",
+                    data: {},
+                }
+                const res = await this.uploadNodeTwo(courseID, lectureID, chapterID, nodeOneId[0], node.title, node.detail)
+                console.log(res)
+                if (!res.success) return res
+            }
+
             return {
                 success: true,
                 message: "트리 생성에 성공했습니다",
-                data: data,
+                data: {},
             }
         } catch (error) {
             return {

@@ -15,39 +15,40 @@ export async function POST(request: Request): Promise<Response> {
             apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
         });
 
+        const nodeTitleList = nodeList.map(node => node.title);
+
         const systemPrompt = `
             Find out which chapter the node belongs to and return the chapter's chapterID.
-            The chapterList is as follows: ${JSON.stringify(chapterList)}
-            The nodeList is as follows: ${JSON.stringify(nodeList)}
-            Return the chapterID of the chapter to which the node belongs, or return "NO RELATION" if there is no relation.
-            Return the chapterID or "NO RELATION" as a string, without ANY additional text.
-            Return the chapterID or "NO RELATION" as a string, without ANY additional text.
-
-            Return in the following format:
+            The chapterList is as follows: ${JSON.stringify(chapterList)}.
+            The nodeList is as follows: ${JSON.stringify(nodeTitleList)}.
+            Insert the nodeID of the node into the chapterID of the chapter to which the node belongs.
+            If the node does not belong to any chapter, insert the nodeID into NO RELATION.
+            RETURN THE RESULT IN JSON FORMAT, DO NOT ADD ANY ADDITIONAL CHARACTERS.
+            Return in the following JSON format:
             [
                 {
-                    "chapterID": ${chapterList[0].chapterID},
-                    "nodeID": ["node1ID", "node2ID", ...]
+                    "chapterID": "${chapterList[0].chapterID}",
+                    "nodeID": ["~"]
                 },
                 {
-                    "chapterID": ${chapterList[1].chapterID},
-                    "nodeID": ["node1ID", "node2ID", ...]
+                    "chapterID": "${chapterList[1].chapterID}",
+                    "nodeID": ["~"]
                 },
                 {
-                    "chapterID": ${chapterList[2].chapterID},
-                    "nodeID": ["node1ID", "node2ID", ...]
+                    "chapterID": "${chapterList[2].chapterID}",
+                    "nodeID": ["~"]
                 },
                 {
-                    "chapterID": ${chapterList[3].chapterID},
-                    "nodeID": ["node1ID", "node2ID", ...]
+                    "chapterID": "${chapterList[3].chapterID}",
+                    "nodeID": ["~"]
                 },
                 {
-                    "chapterID": ${chapterList[4].chapterID},
-                    "nodeID": ["node1ID", "node2ID", ...]
+                    "chapterID": "${chapterList[4].chapterID}",
+                    "nodeID": ["~"]
                 },
                 {
-                    "chapterID": NO RELATION,
-                    "nodeID": ["node1ID", "node2ID", ...]
+                    "chapterID": "NO RELATION",
+                    "nodeID": ["~"]
                 },
             ]
         `;
@@ -61,8 +62,18 @@ export async function POST(request: Request): Promise<Response> {
         });
 
         const result = completion.choices[0].message.content;
+        if (result?.includes("json")) {
+            const removeJson = result!.replace("json", "");
+            const parsed = JSON.parse(removeJson);
 
-        return new Response(
+            return new Response(
+                JSON.stringify({
+                    success: true,
+                    message: "노드 분류에 성공했습니다",
+                    data: parsed
+                }),
+            );
+        } else return new Response(
             JSON.stringify({
                 success: true,
                 message: "노드 분류에 성공했습니다",
@@ -72,7 +83,7 @@ export async function POST(request: Request): Promise<Response> {
     } catch (error) {
         return new Response(
             JSON.stringify({
-                success: true,
+                success: false,
                 message: "노드 분류에 실패했습니다",
                 data: error
             }),

@@ -1,5 +1,6 @@
-import { ChapterProps, LectureProps, NodeProps } from "@/types/route";
+import { ChapterProps, LectureProps, UnorganizedNodeProps } from "@/types/route";
 import GlobalComponents from "@/lib/components/global_components";
+import { Handle, Position } from "reactflow";
 
 function LectureItem({
     data, isConnectable
@@ -14,6 +15,12 @@ function LectureItem({
                 <path d="M16.25 3.75V11.25H23.75" stroke="#8E8C8C" strokeWidth="2" strokeLinejoin="round" />
                 <path d="M16.25 3.75V11.25H23.75" stroke="black" strokeOpacity="0.3" strokeWidth="2" strokeLinejoin="round" />
             </svg>
+            <Handle
+                type="source"
+                position={Position.Right}
+                id="id"
+                isConnectable={isConnectable}
+            />
             <div className="text-h3-m-16">{data.lectureName}</div>
         </div>
     );
@@ -22,7 +29,7 @@ function LectureItem({
 function ChapterItem({
     data, isConnectable
 }: {
-    data: ChapterProps; isConnectable: boolean
+    data: any; isConnectable: boolean
 }) {
     function Circle({ dir }: { dir: "left" | "right" }) {
         return (
@@ -32,30 +39,59 @@ function ChapterItem({
         )
     }
     return (
-        <div className="flex items-center">
-            <Circle dir="left" />
-            <div className="bg-main-red flex items-center justify-center" style={{ padding: "6px 20px", borderRadius: 20 }}>
-                <div className="text-neutral-white text-h2-sb-12">{data.chapterName}</div>
+        <>
+            <Handle
+                type="target"
+                position={Position.Left}
+                id={`chapter-${data.index}`}
+
+                isConnectable={isConnectable}
+            />
+            <div className="flex items-center">
+                <Circle dir="left" />
+                <div className="bg-main-red flex items-center justify-center" style={{ padding: "6px 20px", borderRadius: 20 }}>
+                    <div className="text-neutral-white text-h2-sb-12">{data.chapterName}</div>
+                </div>
+                <Circle dir="right" />
             </div>
-            <Circle dir="right" />
-        </div>
+            <Handle
+                type="source"
+                position={Position.Right}
+                id={`chapter-${data.index}`}
+                isConnectable={isConnectable}
+            />
+        </>
     )
 }
 
 function NodeItem({
     data, isConnectable
 }: {
-    data: NodeProps; isConnectable: boolean
+    data: any; isConnectable: boolean
 }) {
     return (
-        <div className="w-fit">
-            <GlobalComponents.Toggle
-                title={data.title}
-                contents={data.detail}
-                pinStatus={"none"}
-                pinClick={() => { }}
+        <>
+            <Handle
+                type="target"
+                position={Position.Left}
+                id={`node-${data.index}`}
+                isConnectable={isConnectable}
             />
-        </div>
+            <div className="w-fit">
+                <GlobalComponents.Toggle
+                    title={data.title}
+                    contents={data.detail}
+                    pinStatus={"none"}
+                    pinClick={() => { }}
+                />
+            </div>
+            <Handle
+                type="source"
+                position={Position.Right}
+                id={`node-${data.index}`}
+                isConnectable={isConnectable}
+            />
+        </>
     )
 }
 

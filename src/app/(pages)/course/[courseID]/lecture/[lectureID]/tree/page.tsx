@@ -1,7 +1,7 @@
 "use client"
 
 import Container from "@/lib/components/container";
-import { ChapterProps, CourseProps, LectureProps, NodeProps } from "@/types/route";
+import { ChapterProps, CourseProps, UnorganizedNodeProps } from "@/types/route";
 import GlobalComponents from "@/lib/components/global_components";
 import { useEffect, useMemo, useState } from "react";
 import Loader from "@/lib/components/loader";
@@ -13,6 +13,8 @@ import ReadNodeOneUseCase from '../../../../../../../domain/node_one/read_node_o
 import NodeConverter from "./converter";
 import NodeTypes from "./node";
 import ReactFlow, { Controls } from 'reactflow';
+import 'reactflow/dist/style.css';
+
 
 
 export default function Home() {
@@ -37,7 +39,7 @@ export default function Home() {
     }
 
     const readTree = async () => {
-        const nodeList: NodeProps[] = []
+        const nodeList: UnorganizedNodeProps[] = []
 
         const read_lecture = new ReadLectureUseCase();
         const read_chapter = new ReadChapterUseCase();
@@ -50,12 +52,18 @@ export default function Home() {
         const chap_res = await read_chapter.read(courseID, lectureID)
         const chapterList = chap_res.data as ChapterProps[]
 
-        chapterList.forEach(async (chapter: ChapterProps) => {
-            const node_res = await read_node.read(courseID, lectureID, chapter.chapterID)
-            node_res.data.forEach((node: NodeProps) => {
-                nodeList.push(node)
+        async function processChapter(chapter: ChapterProps) {
+            const node_res = await read_node.read(courseID, lectureID, chapter.chapterID);
+            node_res.data.forEach((node: any) => {
+                nodeList.push({
+                    ...node,
+                    chapterID: chapter.chapterID,
+                });
             });
-        });
+        }
+        const chapterPromises = chapterList.map(chapter => processChapter(chapter));
+
+        await Promise.all(chapterPromises);
 
         const { initialNodes, initialEdges } = NodeConverter(
             lecture,

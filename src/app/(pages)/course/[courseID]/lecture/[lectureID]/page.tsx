@@ -28,6 +28,7 @@ export default function LectureItem() {
     const [qna, setQna] = useState<{ question: string, nodes: { index: number, title: string, detail: string, pin: boolean }[] }[]>([])
     const [nodes, setNodes] = useState<any[]>([])
     const [modal, setModal] = useState(false)
+    const [selectedNode, setSelectedNode] = useState([] as UnorganizedNodeProps[])
 
 
     const readCourse = async () => {
@@ -58,8 +59,14 @@ export default function LectureItem() {
         setScreenCapture("")
         setLoading(true)
         const answer_prompt_use_case = new AnswerPromptUseCase()
+        
         const response = await answer_prompt_use_case.generate(prompt, lecture.headlineContents)
-        console.log(response)
+        if (!response.success) {
+            alert("일시적인 오류가 발생했습니다. 다시 시도해주세요.")
+            setLoading(false)
+            return
+        }
+
         const data = response.data.map((node: any) => {
             return {
                 index: node.index,
@@ -68,6 +75,7 @@ export default function LectureItem() {
                 pin: false
             }
         })
+        
         const newQna = [...qna]
         newQna.push({
             question: prompt,
@@ -83,6 +91,7 @@ export default function LectureItem() {
             if (parseInt(node.index) === data.index) {
                 if (!nodes.includes(node.title)) {
                     setNodes([...nodes, node.title])
+                    setSelectedNode([...selectedNode, node])
                     return {
                         index: node.index,
                         title: node.title,
@@ -91,6 +100,7 @@ export default function LectureItem() {
                     }
                 } else {
                     setNodes(nodes.filter((title: string) => title !== node.title))
+                    setSelectedNode(selectedNode.filter((node: UnorganizedNodeProps) => node.title !== data.title))
                     return {
                         index: node.index,
                         title: node.title,
@@ -104,8 +114,6 @@ export default function LectureItem() {
         setQna(newQna)
     }
 
-
-    console.log(qna)
     const createNode = async () => {
         setLoading(true)
         const read_chapter_use_case = new ReadChapterUseCase();
@@ -126,7 +134,7 @@ export default function LectureItem() {
         const organize_node_use_case = new OrganizeNodeUseCase();
         const response = await organize_node_use_case.organize(
             chapters,
-            nodes,
+            selectedNode,
             courseID,
             lectureID
         )
@@ -134,6 +142,7 @@ export default function LectureItem() {
 
         setQna([])
         setNodes([])
+        setSelectedNode([])
         setLoading(false)
 
         setModal(true)
