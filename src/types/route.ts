@@ -19,6 +19,7 @@ type LectureProps = {
     createdAt: Date;
     fileURL: string;
     headlineContents: {headline: string, content: string}[];
+    summary: string;
     chapters?: ChapterProps[];
 }
 

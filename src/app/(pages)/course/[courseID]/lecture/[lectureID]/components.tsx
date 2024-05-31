@@ -5,9 +5,11 @@ import GlobalComponents from "@/lib/components/global_components"
 import { ChangeEvent, useState } from "react"
 
 function CourseContentToggle({
-    lectureName
+    lectureName,
+    onModalOpen
 }: {
-    lectureName: string
+    lectureName: string,
+    onModalOpen: () => void
 }) {
     return (
         <div className="p-5 flex justify-between border border-neutral-300" style={{ borderRadius: 20 }}>
@@ -18,11 +20,8 @@ function CourseContentToggle({
                 </svg>
                 <div className="text-h3-m-16">{lectureName}</div>
             </div>
-            <div style={{ padding: 10 }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10" fill="none">
-                    <path d="M5.66861 8.92558C6.34119 9.69147 7.65881 9.69147 8.33139 8.92558L13.6481 2.87127C14.4986 1.90277 13.711 0.5 12.3167 0.5H1.68328C0.288997 0.5 -0.498613 1.90277 0.35189 2.87127L5.66861 8.92558Z" fill="#F1ECEC" />
-                </svg>
-            </div>
+
+            <button onClick={onModalOpen} className="border px-3 py-2 border-neutral-400 rounded-lg bg-neutral-100 text-h3-m-14 text-neutral-700">요약본 보기</button>
         </div>
     )
 }
@@ -213,6 +212,17 @@ function NodeMap({
             </div>
             <GlobalButton.SeeTree text="질문트리" onClick={seeTree} />
         </div>
+    )
+}
+
+
+function Popup({
+
+}:{
+
+}){
+    return(
+        <div></div>
     )
 }
 

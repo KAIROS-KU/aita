@@ -29,6 +29,7 @@ export default function LectureItem() {
     const [nodes, setNodes] = useState<any[]>([])
     const [modal, setModal] = useState(false)
     const [selectedNode, setSelectedNode] = useState([] as UnorganizedNodeProps[])
+    const [summaryModal, setSummaryModal] = useState(false)
 
 
     const readCourse = async () => {
@@ -59,15 +60,17 @@ export default function LectureItem() {
         setScreenCapture("")
         setLoading(true)
         const answer_prompt_use_case = new AnswerPromptUseCase()
-        
+
         const response = await answer_prompt_use_case.generate(prompt, lecture.headlineContents)
+        console.log(response)
         if (!response.success) {
             alert("일시적인 오류가 발생했습니다. 다시 시도해주세요.")
             setLoading(false)
             return
         }
+        console.log(response)
 
-        const data = response.data.map((node: any) => {
+        const data = response?.data?.map((node: any) => {
             return {
                 index: node.index,
                 title: node.title,
@@ -75,7 +78,7 @@ export default function LectureItem() {
                 pin: false
             }
         })
-        
+
         const newQna = [...qna]
         newQna.push({
             question: prompt,
@@ -120,17 +123,6 @@ export default function LectureItem() {
         const res = await read_chapter_use_case.read(courseID, lectureID);
         const chapters = res.data
 
-        // const create_node_one_use_case = new CreateNodeOneUseCase();
-        // nodes.forEach(async (title: string) => {
-        //     await create_node_one_use_case.create(
-        //         courseID,
-        //         lectureID,
-        //         sampleChap,
-        //         title,
-        //         "detail"
-        //     );
-        // })
-
         const organize_node_use_case = new OrganizeNodeUseCase();
         const response = await organize_node_use_case.organize(
             chapters,
@@ -156,6 +148,8 @@ export default function LectureItem() {
         setScreenCapture(sc);
     };
 
+    console.log(summaryModal)
+
     return (
         <Container.WideContainer>
             <ScreenCapture onEndCapture={handleScreenCapture}>
@@ -171,7 +165,10 @@ export default function LectureItem() {
                                     <div className="text-h3-m-16">{courses.courseName}</div>
                                     <div className="text-body-r-16 text-neutral-600">{courses.courseCode}</div>
                                 </div>
-                                <Components.CourseContentToggle lectureName={lecture.lectureName} />
+                                <Components.CourseContentToggle
+                                    lectureName={lecture.lectureName}
+                                    onModalOpen={() => setSummaryModal(true)}
+                                />
                             </div>
                             <div className="w-full flex-grow bg-neutral-200 relative" style={{
                                 borderRadius: 20
@@ -241,6 +238,22 @@ export default function LectureItem() {
                     <div className="flex flex-col justify-between h-full">
                         <div className="text-h2-sb-20">강의에 대한 지식 트리를 생성했어요!</div>
                         <GlobalButton.MainButton text="보러가기" onClick={() => router.push(`/course/${courseID}/lecture/${lectureID}/tree`)} />
+                    </div>
+                </Modal>
+            }
+
+            {
+                summaryModal && <Modal open={summaryModal} onClose={() => setSummaryModal(false)}>
+                    <div className="flex flex-col gap-5 h-full overflow-hidden">
+                        <div className="flex gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                <path fillRule="evenodd" clipRule="evenodd" d="M9 1C7.89543 1 7 1.89543 7 3H6C4.34315 3 3 4.34315 3 6V20C3 21.6569 4.34315 23 6 23H18C19.6569 23 21 21.6569 21 20V6C21 4.34315 19.6569 3 18 3H17C17 1.89543 16.1046 1 15 1H9ZM17 5C17 6.10457 16.1046 7 15 7H9C7.89543 7 7 6.10457 7 5H6C5.44772 5 5 5.44772 5 6V20C5 20.5523 5.44772 21 6 21H18C18.5523 21 19 20.5523 19 20V6C19 5.44772 18.5523 5 18 5H17ZM9 3H15V5H9V3Z" fill="#FF6262" />
+                            </svg>
+                            <div className="text-h2-sb-18 text-neutral-black">강의 요약</div>
+                        </div>
+                        <div className="bg-neutral-100 p-4 rounded-3xl h-full overflow-scroll">
+                            <div className="text-body-r-14 text-neutral-black">{lecture.summary}</div>
+                        </div>
                     </div>
                 </Modal>
             }

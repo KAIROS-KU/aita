@@ -14,7 +14,7 @@ export default function NodeConverter(
         data: {
             lectureName: lecture.lectureName,
         },
-        position: { x: 0, y: 1200 },
+        position: { x: 0, y: 600 },
         sourcePosition: 'right',
         targetPosition: 'left',
     });
@@ -26,7 +26,7 @@ export default function NodeConverter(
             data: {
                 chapterName: chapter.chapterName,
             },
-            position: { x: 300, y: (chap_id + 2) * 300 },
+            position: { x: 300, y: (chap_id + 2) * 200 },
             sourcePosition: 'right',
             targetPosition: 'left',
         });

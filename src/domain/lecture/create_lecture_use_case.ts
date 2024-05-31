@@ -95,7 +95,7 @@ export default class CreateLectureUseCase {
             method: "POST",
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                pdfURL: fileURL
+                pdfUrl: fileURL
             }),
         })
         const imageArrayResult = await imageArrayRes.json()

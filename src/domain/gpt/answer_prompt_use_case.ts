@@ -3,17 +3,17 @@ import route from "@/types/route";
 export default class AnswerPromptUseCase {
     async generate(
         prompt: string,
-        headlineContents: { headline: string, content: string }[]
+        textContents: { headline: string, content: string }[]
     ): Promise<ApiResponse> {
         try {
-            const contents = JSON.stringify(headlineContents)
+            const headlineContents = JSON.stringify(textContents)
 
             const res = await fetch(`${route}/api/v1/gpt/query`, {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     prompt,
-                    contents
+                    headlineContents
                 }),
             })
 

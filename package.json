@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.11.5",
     "@google-cloud/vision": "^4.2.1",
     "@mui/material": "^5.15.18",
+    "axios": "^1.7.2",
     "dotenv": "^16.4.5",
     "firebase": "^10.11.1",
     "html2canvas": "^1.4.1",
