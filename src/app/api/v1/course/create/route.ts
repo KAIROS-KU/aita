@@ -4,11 +4,12 @@ import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   try {
-    const { courseName, courseCode, syllabusFile, profName } = await request.json() as {
+    const { courseName, courseCode, syllabusFile, profName, lectureSummary } = await request.json() as {
       courseName: string,
       courseCode: string,
       syllabusFile: string,
       profName: string,
+      lectureSummary: string,
     };
 
     const cookieStore = cookies();
@@ -32,6 +33,7 @@ export async function POST(request: Request) {
       courseCode: courseCode,
       syllabusFile: syllabusFile || "Unknown",
       profName: profName,
+      lectureSummary: lectureSummary,
       createdAt: createdAt,
     }
 
