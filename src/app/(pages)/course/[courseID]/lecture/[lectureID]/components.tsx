@@ -160,7 +160,7 @@ function PromptInput({
         }
     }
     return (
-        <div className="border-2 border-neutral-300 p-2 flex gap-3" style={{ borderRadius: 20 }}>
+        <div className="border-2 border-neutral-300 p-2 flex gap-3" style={{ borderRadius: 20, paddingLeft: 16 }}>
             <input
                 className="flex-grow outline-none"
                 onChange={handleChange}

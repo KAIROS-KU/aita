@@ -74,6 +74,8 @@ export default function Home() {
         setEdges(initialEdges);
     }
 
+    console.log(nodes)
+
     useEffect(() => {
         readTree();
         readCourseData()

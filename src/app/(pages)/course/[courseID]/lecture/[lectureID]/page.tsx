@@ -4,7 +4,7 @@ import Container from "@/lib/components/container"
 import { useParams, useRouter } from "next/navigation"
 import Components from "./components"
 import ReadLectureUseCase from "../../../../../../domain/lecture/read_lecture_use_case"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import ReadCourseUseCase from "../../../../../../domain/course/read_course_use_case"
 import Loader from "@/lib/components/loader"
 import AnswerPromptUseCase from "../../../../../../domain/gpt/answer_prompt_use_case"
@@ -56,6 +56,7 @@ export default function LectureItem() {
         const answer_prompt_use_case = new AnswerPromptUseCase()
 
         const response = await answer_prompt_use_case.generate(prompt, lecture.headlineContents)
+        console.log(response)
         if (!response.success) {
             alert("일시적인 오류가 발생했습니다. 다시 시도해주세요.")
             setLoading(false)
@@ -114,6 +115,7 @@ export default function LectureItem() {
         const read_chapter_use_case = new ReadChapterUseCase();
         const res = await read_chapter_use_case.read(courseID, lectureID);
         const chapters = res.data
+        console.log(res)
 
         const organize_node_use_case = new OrganizeNodeUseCase();
         const response = await organize_node_use_case.organize(
@@ -122,7 +124,7 @@ export default function LectureItem() {
             courseID,
             lectureID
         )
-
+        console.log(response)
         setQna([])
         setNodes([])
         setSelectedNode([])
@@ -171,8 +173,8 @@ export default function LectureItem() {
                             deliverNewNodes={(newNodes: any) => setNodes(newNodes)}
                         />
                     </div>
-                    <div className="flex flex-col gap-2" style={{ height: 600, overflowY: "scroll" }}>
-                        <div className="flex-grow w-full">
+                    <div className="flex flex-col justify-between h-full overflow-scroll" style={{ maxHeight: "63vh" }}>
+                        <div className="flex-grow w-full overflow-scroll">
                             {qna.map((data, index) => (
                                 <Components.QnA
                                     key={index}
@@ -183,14 +185,9 @@ export default function LectureItem() {
                             ))}
                         </div>
                     </div>
-
-                    <div className="flex flex-col gap-2 items-end relative">
-                        <div className="w-full">
-                            <Components.PromptInput
-                                sendPrompt={(e) => getPromptResponse(e)}
-                            />
-                        </div>
-                    </div>
+                    <Components.PromptInput
+                        sendPrompt={(e) => getPromptResponse(e)}
+                    />
                 </div>
             </div>
             {loading && <Loader />}

@@ -22,7 +22,7 @@ export default class AnswerPromptUseCase {
             return {
                 success: response.success,
                 message: response.message,
-                data: JSON.parse(response.data)
+                data: response.data
             }
         } catch (error) {
             return {
