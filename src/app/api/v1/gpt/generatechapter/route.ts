@@ -14,35 +14,39 @@ export async function POST(request: Request) {
                     role: "assistant",
                     content: `
                     ${headlines.join("\n")}
-                    위 주제들을 크게 5개의 목차로 분류해해서 JSON 형태로 반환해.
-                    출력형태는 아래와 같아:
+                    Divide the above topics into 5 chapters and return it in JSON format.
+                    The output format is as follows:
+                    """
                     [
                         {
-                            "chapterName": "목차1",
-                            "headlines": ["주제1", "주제2", "주제3", "주제4"]
+                            "chapterName": "chapter1",
+                            "headlines": ["topic1", "topic2", "topic3", "topic4"]
                         },
                         {
-                            "chapterName": "목차2",
-                            "headlines": ["주제1", "주제2", "주제3", "주제4"]
+                            "chapterName": "chapter2",
+                            "headlines": ["topic1", "topic2", "topic3", "topic4"]
                         },
                         {
-                            "chapterName": "목차3",
-                            "headlines": ["주제1", "주제2", "주제3", "주제4"]
+                            "chapterName": "chapter3",
+                            "headlines": ["topic1", "topic2", "topic3", "topic4"]
                         },
                         ...
                     ]
+                    """
+                    RETURN THE RESULT IN JSON FORMAT ONLY.
                 `,
                 },
             ],
             model: "gpt-4o",
         });
-        const content = completion.choices[0].message.content
+        const content = completion.choices[0].message.content?.replaceAll("```", "")
+        const result = content?.includes("json") ? content?.replace("json", "") : content;
 
         return new Response(
             JSON.stringify({
                 success: true,
                 message: "목차 생성에 성공했습니다",
-                data: content
+                data: result
             }),
         );
     } catch (error) {

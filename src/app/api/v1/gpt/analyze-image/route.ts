@@ -8,7 +8,10 @@ export async function POST(request: Request): Promise<Response> {
             imageURL: string
         };
 
-        const openai = new OpenAI();
+        const openai = new OpenAI({
+            apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+            dangerouslyAllowBrowser: true
+        });
 
         const completion = await openai.chat.completions.create({
             model: "gpt-4o",
@@ -48,7 +51,7 @@ export async function POST(request: Request): Promise<Response> {
     } catch (error) {
         return new Response(
             JSON.stringify({
-                success: true,
+                success: false,
                 message: "답변 생성에 실패했습니다",
                 data: error
             }),

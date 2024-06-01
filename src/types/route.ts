@@ -20,6 +20,7 @@ type LectureProps = {
     fileURL: string;
     headlineContents: {headline: string, content: string}[];
     summary: string;
+    imageURLArray: string[];
     chapters?: ChapterProps[];
 }
 

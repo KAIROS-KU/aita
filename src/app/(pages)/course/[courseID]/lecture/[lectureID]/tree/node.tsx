@@ -1,4 +1,4 @@
-import { ChapterProps, LectureProps, UnorganizedNodeProps } from "@/types/route";
+import { LectureProps } from "@/types/route";
 import GlobalComponents from "@/lib/components/global_components";
 import { Handle, Position } from "reactflow";
 

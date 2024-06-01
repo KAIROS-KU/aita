@@ -24,10 +24,10 @@ export default function Home() {
   const getCourse = async () => {
     setLoading(true)
     const find_course_use_case = new ReadCourseUseCase();
-    const res = await find_course_use_case.read();
+    const res = await find_course_use_case.read(courseID);
     const courses = res.data;
-    const course = courses?.find((course: CourseProps) => course.courseID === courseID);
-    setCourse(course);
+    if (!courses.courseName) return router.push("/course/create");
+    setCourse(courses);
     getLectures();
     setLoading(false)
   }
@@ -50,7 +50,8 @@ export default function Home() {
       if (!lectureName || !file) return alert("모든 항목을 입력해주세요.")
       setLoading(true)
       const create_lecture_use_case = new CreateLectureUseCase();
-      await create_lecture_use_case.create(courseID, lectureName, file);
+      const response = await create_lecture_use_case.create(courseID, lectureName, file);
+      if (!response.success) return alert("네트워크 오류가 발생했습니다. 다시 시도해주세요.")
       getCourse();
     } catch (error) {
       alert("네트워크 오류가 발생했습니다. 관리자에게 문의주세요.")
@@ -58,8 +59,8 @@ export default function Home() {
       setLoading(false)
       setOpen(false)
     }
-
   }
+
   return (
     <Container.MainContainer>
       <div className="flex flex-col gap-4 w-full">
@@ -69,23 +70,26 @@ export default function Home() {
         </div>
         <GlobalComponents.ProfName name={course?.profName} />
       </div>
-      <div className="flex flex-col gap-3 bg-neutral-100 p-5 mt-8" style={{ borderRadius: 20 }}>
-        <div className="flex justify-between">
-          <div className="text-h2-sb-20 pb-5">강의자료</div>
+      <div className="flex flex-col bg-neutral-100 p-5 mt-8 justify-center gap-3" style={{ borderRadius: 20 }}>
+        <div className="flex justify-between item-center">
+          <div className="text-h2-sb-20 flex items-center">강의자료</div>
           <GlobalButton.AddButton text="강의자료 추가" onClick={() => setOpen(true)} />
-
         </div>
-        <div className="flex flex-col gap-3" style={{ overflowY: "scroll", maxHeight: 650 }}>
-          {lecture?.map((lecture: LectureProps, index: number) => (
-            <Components.LectureItem
-              key={index}
-              lectureName={lecture.lectureName}
-              createdAt={lecture.createdAt}
-              treeClick={() => router.push(`/course/${courseID}/lecture/${lecture.lectureID}/tree`)}
-              lectureClick={() => router.push(`/course/${courseID}/lecture/${lecture.lectureID}`)}
-            />
-          ))}
-        </div>
+        {
+          lecture.length > 0 && (
+            <div className="flex flex-col gap-3" style={{ overflowY: "scroll", maxHeight: 650 }}>
+              {lecture?.map((lecture: LectureProps, index: number) => (
+                <Components.LectureItem
+                  key={index}
+                  lectureName={lecture.lectureName}
+                  createdAt={lecture.createdAt}
+                  treeClick={() => router.push(`/course/${courseID}/lecture/${lecture.lectureID}/tree`)}
+                  lectureClick={() => router.push(`/course/${courseID}/lecture/${lecture.lectureID}`)}
+                />
+              ))}
+            </div>
+          )
+        }
       </div>
       <Components.AddLectureModal open={open} onClose={() => setOpen(false)} onClick={(e, file) => addLecture(e, file)} />
       {loading && <Loader />}

@@ -16,7 +16,8 @@ export async function GET(request:Request) {
       courseName: doc.data().courseName,
       courseCode: doc.data().courseCode,
       createdAt: doc.data().createdAt,
-      syllabusFile: doc.data().syllabusFile
+      syllabusFile: doc.data().syllabusFile,
+      profName: doc.data().profName,
     }));
 
     return new Response(

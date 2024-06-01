@@ -4,35 +4,24 @@ export async function POST(request: Request) {
 
     const lambdaResponse = await fetch('https://l3nqjnorcil5vwljwdn73mqcui0mpzkg.lambda-url.ap-northeast-2.on.aws', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
       body: JSON.stringify({ pdf_url: pdfUrl })
     });
-    const response = await lambdaResponse.json();
 
-    const { statusCode, body } = response.data;
-    if (statusCode !== 200) {
-      throw new Error('Failed to convert PDF');
-    }
-
-    const responseBody = JSON.parse(body);
-    const images = responseBody.images;
-
+    const responseBody = await lambdaResponse.json();
+    
     return new Response(
-      JSON.stringify({
-        success: true,
-        message: "PDF 변환에 성공했습니다.",
-        data: images
-      })
+      JSON.stringify(responseBody),
+      { status: lambdaResponse.status }
     );
   } catch (error) {
+    console.error('Error:', error || error);
     return new Response(
       JSON.stringify({
         success: false,
-        message: "PDF 변환에 실패했습니다.",
-        data: error
-      })
+        message: 'PDF 변환에 실패했습니다.',
+        data: error || 'Internal Server Error'
+      }),
+      { status: 500 }
     );
   }
 }

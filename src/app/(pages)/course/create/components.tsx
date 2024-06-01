@@ -29,10 +29,12 @@ function CourseInput({
 
 function CreateCourseContent({
     label,
-    onChange
+    onChange,
+    syllabusName
 }: {
     label: string,
-    onChange: (e: File) => void
+    onChange: (e: File) => void,
+    syllabusName: string
 }) {
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -42,7 +44,10 @@ function CreateCourseContent({
     return (
         <div className="flex justify-between w-full bg-neutral-100 items-center" style={{ borderRadius: 20, padding: "20px 32px" }}>
             <div className="text-h2-sb-20">{label}</div>
-            <GlobalButton.AddFile text="파일 업로드" onChange={handleInput} />
+            <div className="flex items-center gap-6">
+                {syllabusName && <div className="text-body-14 text-neutral-700">파일명: {syllabusName}</div>}
+                <GlobalButton.AddFile text="파일 업로드" onChange={handleInput} />
+            </div>
         </div>
     )
 }

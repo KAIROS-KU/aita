@@ -7,15 +7,19 @@ export default class CreateCourseUseCase {
         profName: string,
         syllabusFile: File,
     ): Promise<ApiResponse> {
-        const file = syllabusFile;
-        const storageRes = await fetch(`${route}/api/v1/file/upload`, {
+        const formData = new FormData();
+        formData.append("path", `course/${courseName}/syllabus/${syllabusFile?.name}`);
+        formData.append("file", syllabusFile);
+
+        const uploadFileRes = await fetch(`${route}/api/v1/file/upload`, {
             method: "POST",
-            body: JSON.stringify({
-                path: `course/${courseName}/syllabus/${syllabusFile?.name}`,
-                file,
-            }),
+            body: formData
         });
-        const storageResJson = await storageRes.json()
+        const uploadFileResult = await uploadFileRes.json()
+        if (!uploadFileResult.success) return { success: false, message: "파일 업로드에 실패했습니다", data: null }
+        const fileURL = uploadFileResult.data
+
+
 
         const res = await fetch(`${route}/api/v1/course/create`, {
             method: "POST",
@@ -23,7 +27,7 @@ export default class CreateCourseUseCase {
             body: JSON.stringify({
                 courseName: courseName,
                 courseCode: courseCode || "Unknown",
-                syllabusPath: storageResJson.data || "Unknown",
+                syllabusFile: fileURL || "Unknown",
                 profName: profName || "Unknown",
             }),
         });

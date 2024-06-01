@@ -17,15 +17,20 @@ export default function CreatePage() {
         courseName: "",
         courseCode: "",
         profName: "",
-        syllabus: {} as File
+        syllabus: {} as File,
+        syllabusName: ""
     })
 
     const handleInput = async (e: string | File, type: string) => {
         setCourseData({ ...courseData, [type]: e })
+        if (type === "syllabus") {
+            const file = e as File
+            setCourseData({ ...courseData, syllabusName: file.name })
+        }
     }
 
     const createCourse = async () => {
-        if (!courseData.courseName || !courseData.courseCode || !courseData.profName || !courseData.syllabus) return alert("모든 항목을 입력해주세요.")
+        if (!courseData.courseName || !courseData.courseCode || !courseData.profName ) return alert("모든 항목을 입력해주세요.")
         setLoading(true)
         const use_case = new CreateCourseUseCase()
         const res = await use_case.create(courseData.courseName, courseData.courseCode, courseData.profName, courseData.syllabus)
@@ -36,7 +41,7 @@ export default function CreatePage() {
 
     return (
         <Container.MainContainer>
-            <div className="flex flex-col w-full gap-9">
+            <div className="flex flex-col w-full gap-9" style={{ maxWidth: 792 }}>
                 <div className="flex gap-4">
                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="31" viewBox="0 0 30 31" fill="none">
                         <path d="M2.5 4.25H10C11.3261 4.25 12.5979 4.77678 13.5355 5.71447C14.4732 6.65215 15 7.92392 15 9.25V26.75C15 25.7554 14.6049 24.8016 13.9017 24.0983C13.1984 23.3951 12.2446 23 11.25 23H2.5V4.25Z" stroke="#1F1717" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -67,6 +72,7 @@ export default function CreatePage() {
                     <Components.CreateCourseContent
                         label="강의계획서"
                         onChange={(e: File) => handleInput(e, "syllabus")}
+                        syllabusName={courseData.syllabusName}
                     />
                 </div>
                 <div className="w-64 self-center">

@@ -2,6 +2,7 @@
 
 import GlobalButton from "@/lib/components/global_button"
 import GlobalComponents from "@/lib/components/global_components"
+import Image from "next/image"
 import { ChangeEvent, useState } from "react"
 
 function CourseContentToggle({
@@ -216,13 +217,24 @@ function NodeMap({
 }
 
 
-function Popup({
-
-}:{
-
-}){
-    return(
-        <div></div>
+function ImageContainer({
+    imageArray
+}: {
+    imageArray: string[]
+}) {
+    return (
+        <div className="flex flex-col gap-3 overflow-scroll flex-grow">
+            {imageArray.map((image, index) => (
+                <Image
+                    key={index}
+                    src={image}
+                    layout="responsive"
+                    alt={`image-${index}`}
+                    width={500}
+                    height={500}
+                />
+            ))}
+        </div>
     )
 }
 
@@ -233,6 +245,7 @@ const Components = {
     NodeMap,
     QnA,
     PromptInput,
+    ImageContainer
 }
 
 export default Components

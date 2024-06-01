@@ -4,18 +4,15 @@ import Container from "@/lib/components/container"
 import { useParams, useRouter } from "next/navigation"
 import Components from "./components"
 import ReadLectureUseCase from "../../../../../../domain/lecture/read_lecture_use_case"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import ReadCourseUseCase from "../../../../../../domain/course/read_course_use_case"
 import Loader from "@/lib/components/loader"
 import AnswerPromptUseCase from "../../../../../../domain/gpt/answer_prompt_use_case"
-import { ScreenCapture } from 'react-screen-capture';
-import Image from "next/image"
 import ReadChapterUseCase from "../../../../../../domain/chapter/read_chapter_use_case"
 import Modal from "@/lib/components/modal"
 import GlobalButton from "@/lib/components/global_button"
 import { CourseProps, LectureProps, UnorganizedNodeProps } from "@/types/route"
 import OrganizeNodeUseCase from "../../../../../../domain/node/organize_node_use_case"
-
 
 export default function LectureItem() {
     const params = useParams()
@@ -30,7 +27,6 @@ export default function LectureItem() {
     const [modal, setModal] = useState(false)
     const [selectedNode, setSelectedNode] = useState([] as UnorganizedNodeProps[])
     const [summaryModal, setSummaryModal] = useState(false)
-
 
     const readCourse = async () => {
         setLoading(true)
@@ -55,20 +51,16 @@ export default function LectureItem() {
         readCourse()
     }, [])
 
-
     const getPromptResponse = async (prompt: string) => {
-        setScreenCapture("")
         setLoading(true)
         const answer_prompt_use_case = new AnswerPromptUseCase()
 
         const response = await answer_prompt_use_case.generate(prompt, lecture.headlineContents)
-        console.log(response)
         if (!response.success) {
             alert("일시적인 오류가 발생했습니다. 다시 시도해주세요.")
             setLoading(false)
             return
         }
-        console.log(response)
 
         const data = response?.data?.map((node: any) => {
             return {
@@ -130,7 +122,6 @@ export default function LectureItem() {
             courseID,
             lectureID
         )
-        console.log(response)
 
         setQna([])
         setNodes([])
@@ -140,98 +131,68 @@ export default function LectureItem() {
         setModal(true)
     }
 
-
-    const [screenCapture, setScreenCapture] = useState("")
-
-    const handleScreenCapture = (sc: any) => {
-        console.log(sc);
-        setScreenCapture(sc);
-    };
-
-    console.log(summaryModal)
-
     return (
         <Container.WideContainer>
-            <ScreenCapture onEndCapture={handleScreenCapture}>
-                {({ onStartCapture }: { onStartCapture: () => void }) => (
-                    <div className="pb-8 h-full" style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        columnGap: 20
-                    }}>
-                        <div className="items-center px-5 flex flex-col gap-4">
-                            <div className="flex flex-col gap-3 w-full">
-                                <div className="flex gap-4 items-center">
-                                    <div className="text-h3-m-16">{courses.courseName}</div>
-                                    <div className="text-body-r-16 text-neutral-600">{courses.courseCode}</div>
-                                </div>
-                                <Components.CourseContentToggle
-                                    lectureName={lecture.lectureName}
-                                    onModalOpen={() => setSummaryModal(true)}
-                                />
-                            </div>
-                            <div className="w-full flex-grow bg-neutral-200 relative" style={{
-                                borderRadius: 20
-                            }}>
-                                {lecture.fileURL && <embed src={lecture.fileURL} className="w-full h-full" />}
-                                {lecture.fileURL && <iframe src={lecture.fileURL} className="w-full h-full" />}
-
-                            </div>
-                            <div className="absolute hover:bg-neutral-500 bg-neutral-300" style={{
-                                bottom: 20,
-                                cursor: "pointer",
-                                borderRadius: 12,
-                                transition: "all 0.3s",
-                                padding: "4px 12px"
-                            }} onClick={onStartCapture}>
-                                <Components.ToolTip />
-                            </div>
+            <div className="pb-4 h-full" style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                columnGap: 20,
+            }}>
+                <div className="items-center px-5 flex flex-col gap-4" style={{ maxHeight: "87vh" }}>
+                    <div className="flex flex-col gap-3 w-full">
+                        <div className="flex gap-4 items-center">
+                            <div className="text-h3-m-16">{courses.courseName}</div>
+                            <div className="text-body-r-16 text-neutral-600">{courses.courseCode}</div>
                         </div>
-
-                        <div className="flex flex-col gap-9">
-                            <div className="flex flex-col gap-2">
-                                <Components.BreadCrumbs crumbs={[courses.courseName, lecture.lectureName]} />
-                                <Components.NodeMap
-                                    createNode={createNode}
-                                    seeTree={() => router.push(`/course/${courseID}/lecture/${lectureID}/tree`)}
-                                    nodes={nodes}
-                                    deliverNewNodes={(newNodes: any) => setNodes(newNodes)}
-                                />
-                            </div>
-                            <div className="flex flex-col gap-2" style={{ height: 600, overflowY: "scroll" }}>
-                                <div className="flex-grow w-full">
-                                    {qna.map((data, index) => (
-                                        <Components.QnA
-                                            key={index}
-                                            question={data.question}
-                                            answerData={data.nodes}
-                                            pinClick={data => clickPin(data, index)}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col gap-2 items-end relative">
-                                {screenCapture &&
-                                    <div className="absolute" style={{ top: -100 }}>
-                                        <Image
-                                            src={screenCapture}
-                                            alt="Screen Capture"
-                                            width={200}
-                                            height={200}
-                                        />
-                                    </div>
-                                }
-                                <div className="w-full">
-                                    <Components.PromptInput
-                                        sendPrompt={(e) => getPromptResponse(e)}
-                                    />
-                                </div>
-                            </div>
+                        <Components.CourseContentToggle
+                            lectureName={lecture.lectureName}
+                            onModalOpen={() => setSummaryModal(true)}
+                        />
+                    </div>
+                    <div className="w-full flex-grow bg-neutral-200 relative flex overflow-hidden" style={{
+                        borderRadius: 20
+                    }}>
+                        <div className="h-full overflow-scroll flex-grow">
+                            {
+                                lecture.imageURLArray &&
+                                <Components.ImageContainer imageArray={lecture.imageURLArray} />
+                            }
                         </div>
                     </div>
-                )}
-            </ScreenCapture>
+                </div>
+
+                <div className="flex flex-col gap-9">
+                    <div className="flex flex-col gap-2">
+                        <Components.BreadCrumbs crumbs={[courses.courseName, lecture.lectureName]} />
+                        <Components.NodeMap
+                            createNode={createNode}
+                            seeTree={() => router.push(`/course/${courseID}/lecture/${lectureID}/tree`)}
+                            nodes={nodes}
+                            deliverNewNodes={(newNodes: any) => setNodes(newNodes)}
+                        />
+                    </div>
+                    <div className="flex flex-col gap-2" style={{ height: 600, overflowY: "scroll" }}>
+                        <div className="flex-grow w-full">
+                            {qna.map((data, index) => (
+                                <Components.QnA
+                                    key={index}
+                                    question={data.question}
+                                    answerData={data.nodes}
+                                    pinClick={data => clickPin(data, index)}
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-2 items-end relative">
+                        <div className="w-full">
+                            <Components.PromptInput
+                                sendPrompt={(e) => getPromptResponse(e)}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
             {loading && <Loader />}
             {
                 modal && <Modal open={modal} onClose={() => setModal(false)}>
