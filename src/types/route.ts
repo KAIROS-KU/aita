@@ -1,4 +1,8 @@
-const route = new URLSearchParams(window.location.search);
+const route = process.env.NEXT_PUBLIC_ENVIRONMENT === "development"
+    ? "http://localhost:3000"
+    : process.env.NEXT_PUBLIC_ENVIRONMENT === "test"
+        ? "https://aita-dusky.vercel.app/"
+        : "https://example.com";
 
 type CourseProps = {
     courseName: string;
@@ -14,7 +18,7 @@ type LectureProps = {
     lectureName: string;
     createdAt: Date;
     fileURL: string;
-    headlineContents: { headline: string, content: string }[];
+    headlineContents: {headline: string, content: string}[];
     summary: string;
     imageURLArray: string[];
     chapters?: ChapterProps[];
