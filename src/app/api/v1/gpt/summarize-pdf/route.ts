@@ -1,4 +1,6 @@
 import OpenAI from "openai";
+export const maxDuration = 30;
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
     try {

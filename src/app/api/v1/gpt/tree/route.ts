@@ -1,5 +1,7 @@
 import OpenAI from "openai";
 import { NodeProps } from "postcss";
+export const maxDuration = 30;
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request): Promise<Response> {
   try {
