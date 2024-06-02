@@ -19,10 +19,11 @@ export async function POST(request: Request) {
       );
     }
 
-    const storageRef = ref(storage, path);
-    await uploadBytes(storageRef, file);
+    // const storageRef = ref(storage, path);
+    // await uploadBytes(storageRef, file);
 
-    const URL = await getDownloadURL(storageRef);
+    // const URL = await getDownloadURL(storageRef);
+    const URL = "test";
 
     return new Response(
       JSON.stringify({
