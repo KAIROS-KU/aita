@@ -1,3 +1,6 @@
+export const maxDuration = 30;
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: Request) {
   try {
     const { pdfUrl } = await request.json();
