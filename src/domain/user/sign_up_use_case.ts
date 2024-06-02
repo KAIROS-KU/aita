@@ -1,4 +1,6 @@
+import { storage } from "@/firebase";
 import route from "@/types/route";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default class SignUpUseCase {
     async signUp(
@@ -20,19 +22,14 @@ export default class SignUpUseCase {
         if (!response.success) return response
         const uid = response.data
 
-        const formData = new FormData();
-        formData.append("path", `profile/${uid}`);
-        if (profilePic) formData.append("file", profilePic);
-
-        const storageRes = await fetch(`${route}/api/v1/file/upload`, {
-            method: "POST",
-            body: formData
-        })
-
-        const storageResponse = await storageRes.json()
-        if (!storageResponse.success) return storageResponse
-
-        const fileURL = storageResponse.data
+        if (!profilePic) return response
+        const storageRef = ref(
+            storage,
+            `profile/${uid}`
+        );
+        await uploadBytes(storageRef, profilePic);
+        const URL = await getDownloadURL(storageRef);
+        const fileURL = URL
 
         const createUserRes = await fetch(`${route}/api/v1/user/create`, {
             method: "POST",

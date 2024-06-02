@@ -1,4 +1,6 @@
 import route from "@/types/route";
+import { storage } from "@/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export default class CreateLectureUseCase {
     private async analyzeText(imageURLArray: string[]): Promise<ApiResponse> {
@@ -26,19 +28,14 @@ export default class CreateLectureUseCase {
     ): Promise<ApiResponse> {
 
         // 자료 업로드
-        const formData = new FormData();
-        formData.append("path", `course/${courseID}/lectures/${lectureName}`);
-        formData.append("file", file);
-
-        const uploadFileRes = await fetch(`${route}/api/v1/file/upload`, {
-            method: "POST",
-            body: formData
-        });
-        const uploadFileResult = await uploadFileRes.json()
-        console.log(uploadFileResult)
-        if (!uploadFileResult.success) return { success: false, message: "파일 업로드에 실패했습니다", data: null }
-        const fileURL = uploadFileResult.data
-        const pdfUrl = fileURL
+        const storageRef = ref(
+            storage,
+            `course/${courseID}/lectures/${lectureName}`
+        );
+        await uploadBytes(storageRef, file);
+        const URL = await getDownloadURL(storageRef);
+        const pdfUrl = URL
+        const fileURL = URL
 
 
 
