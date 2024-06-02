@@ -35,6 +35,7 @@ export default class CreateLectureUseCase {
             body: formData
         });
         const uploadFileResult = await uploadFileRes.json()
+        console.log(uploadFileResult)
         if (!uploadFileResult.success) return { success: false, message: "파일 업로드에 실패했습니다", data: null }
         const fileURL = uploadFileResult.data
         const pdfUrl = fileURL
@@ -53,6 +54,7 @@ export default class CreateLectureUseCase {
             }),
         })
         const imageArrayResult = await imageArrayRes.json()
+        console.log(imageArrayResult)
         if (!(imageArrayRes.status === 200)) return { success: false, message: "PDF 변환에 실패했습니다", data: imageArrayResult.data }
         const imageURLArray = imageArrayResult.images
 
@@ -62,6 +64,7 @@ export default class CreateLectureUseCase {
 
         // headline-contents 추출
         const headlineContentsRes = await this.analyzeText(imageURLArray)
+        console.log(headlineContentsRes)
         if (!headlineContentsRes.success) return { success: false, message: "강의자료 내용 분석에 실패했습니다", data: null }
         const headlineContents = await headlineContentsRes.data.flat()
 
@@ -78,11 +81,12 @@ export default class CreateLectureUseCase {
             }),
         })
         const summaryResult = await summaryRes.json()
+        console.log(summaryResult)
         if (!summaryResult.success) return { success: false, message: "강의자료 요약에 실패했습니다", data: null }
         const summary = summaryResult.data
 
 
-        
+
         // 강의 생성
         const res = await fetch(`${route}/api/v1/lecture/create`, {
             method: "POST",

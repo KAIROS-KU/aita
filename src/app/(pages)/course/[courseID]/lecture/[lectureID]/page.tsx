@@ -116,6 +116,11 @@ export default function LectureItem() {
         const res = await read_chapter_use_case.read(courseID, lectureID);
         const chapters = res.data
         console.log(res)
+        if (!res.success) {
+            alert("일시적인 오류가 발생했습니다. 관리자에게 문의주세요.")
+            setLoading(false)
+            return
+        }
 
         const organize_node_use_case = new OrganizeNodeUseCase();
         const response = await organize_node_use_case.organize(

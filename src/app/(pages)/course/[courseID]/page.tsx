@@ -51,6 +51,7 @@ export default function Home() {
       setLoading(true)
       const create_lecture_use_case = new CreateLectureUseCase();
       const response = await create_lecture_use_case.create(courseID, lectureName, file);
+      console.log(response)
       if (!response.success) return alert("네트워크 오류가 발생했습니다. 다시 시도해주세요.")
       getCourse();
     } catch (error) {

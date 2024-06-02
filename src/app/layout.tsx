@@ -1,5 +1,6 @@
 import localFont from "next/font/local";
 import type { Metadata } from "next";
+import { GoogleAnalytics } from '@next/third-parties/google'
 import "./globals.css";
 
 const pretendard = localFont({
@@ -24,6 +25,7 @@ export default function RootLayout({
       <body className={pretendard.className}>
         {children}
       </body>
+      <GoogleAnalytics gaId="G-W7DFNHQ6R8" />
     </html>
   );
 }
